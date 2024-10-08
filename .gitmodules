@@ -1,0 +1,3 @@
+[submodule "GraphicsBaseFramework"]
+	path = GraphicsBaseFramework
+	url = https://github.com/CassieParticles/GraphicsBaseFramework.git
