@@ -1,11 +1,20 @@
 #include <iostream>
-#include <engine/test.h>
+
+
+#include <engine/Window.h>
 
 int main()
 {
-	std::cout << "Hello, world!\n";
+	std::unique_ptr<Window> window = std::make_unique<Window>("Test window", 800, 600);
 
-	printNumberFive();
+	while (!window->getWindowShouldClose())
+	{
+		window->clearBackBuffer();
+
+		
+
+		window->presentBackBuffer();
+	}
 
 	return 0;
 }
