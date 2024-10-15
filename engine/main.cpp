@@ -1,6 +1,5 @@
 #include <iostream>
 
-
 #include <engine/Window.h>
 
 int main()
@@ -10,8 +9,6 @@ int main()
 	while (!window->getWindowShouldClose())
 	{
 		window->clearBackBuffer();
-
-		
 
 		window->presentBackBuffer();
 	}
