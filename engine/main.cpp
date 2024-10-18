@@ -5,12 +5,18 @@
 #include <engine/InputLayout.h>
 #include <engine/Mesh.h>
 
+#include <engine/ResourceManager/ShaderManager.cpp>
+
+#include <string>
+
 int main()
 {
 	std::unique_ptr<Window> window = std::make_unique<Window>("Test window", 800, 600);
 
 	Microsoft::WRL::ComPtr<ID3D11Device> device = window->getDevice();
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext = window->getDeviceContext();
+
+	ShaderManager shaderManager{ device };
 
 	Mesh mesh{};
 
@@ -43,8 +49,9 @@ int main()
 
 	InputLayout inputLayout{};
 
-	VertexShader vs{ device.Get(),L"shaders/vertex.hlsl" };
-	PixelShader ps{ device.Get(),L"shaders/fragment.hlsl" };
+	VertexShader* vs = shaderManager.getVertexShader(L"shaders/vertex.hlsl");
+	PixelShader* ps = shaderManager.getPixelShader(L"shaders/fragment.hlsl");
+
 
 	D3D11_INPUT_ELEMENT_DESC inputArr[3]
 	{
@@ -77,7 +84,7 @@ int main()
 		},
 	};
 
-	inputLayout.addInputLayout(device.Get(), vs.getByteCode(), inputArr, 3);
+	inputLayout.addInputLayout(device.Get(), vs->getByteCode(), inputArr, 3);
 
 	while (!window->getWindowShouldClose())
 	{
@@ -87,8 +94,8 @@ int main()
 		inputLayout.useInputLayout(deviceContext.Get());
 		mesh.useMesh(deviceContext.Get());
 
-		vs.bindShader(deviceContext.Get());
-		ps.bindShader(deviceContext.Get());
+		vs->bindShader(deviceContext.Get());
+		ps->bindShader(deviceContext.Get());
 
 		deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		
