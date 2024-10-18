@@ -1,9 +1,9 @@
 #include <iostream>
 
 #include <engine/Window.h>
-#include <engine/Shader.h>
-#include <engine/InputLayout.h>
-#include <engine/Mesh.h>
+#include <engine/Pipeline/Shader.h>
+#include <engine/Pipeline/InputLayout.h>
+#include <engine/Pipeline/Mesh.h>
 
 #include <engine/ResourceManager/ShaderManager.cpp>
 
