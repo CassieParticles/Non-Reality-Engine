@@ -1,7 +1,8 @@
 #include <iostream>
 
 #include <engine/Window.h>
-#include <engine/Pipeline/Shader.h>
+#include <engine/View.h>
+
 #include <engine/Pipeline/InputLayout.h>
 #include <engine/Pipeline/Mesh.h>
 
@@ -16,7 +17,12 @@ int main()
 	Microsoft::WRL::ComPtr<ID3D11Device> device = window->getDevice();
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext = window->getDeviceContext();
 
-	ShaderManager shaderManager{ device };
+	std::unique_ptr<ShaderManager> shaderManager= std::make_unique<ShaderManager>( device );
+	
+	View view{ device.Get(),{0,0,-10} };
+
+	view.setProjectionMatrixPespective(90 * 3.14159 / 180, window->getAspectRatio(), 0.1f, 1000.f);
+
 
 	Mesh mesh{};
 
@@ -49,8 +55,8 @@ int main()
 
 	InputLayout inputLayout{};
 
-	VertexShader* vs = shaderManager.getVertexShader(L"shaders/vertex.hlsl");
-	PixelShader* ps = shaderManager.getPixelShader(L"shaders/fragment.hlsl");
+	VertexShader* vs = shaderManager->getVertexShader(L"shaders/vertex.hlsl");
+	PixelShader* ps = shaderManager->getPixelShader(L"shaders/fragment.hlsl");
 
 
 	D3D11_INPUT_ELEMENT_DESC inputArr[3]
@@ -91,11 +97,17 @@ int main()
 		window->clearBackBuffer();
 		window->bindRenderTarget();
 
+		view.updateView(deviceContext.Get());
+
 		inputLayout.useInputLayout(deviceContext.Get());
 		mesh.useMesh(deviceContext.Get());
 
 		vs->bindShader(deviceContext.Get());
 		ps->bindShader(deviceContext.Get());
+
+		ID3D11Buffer* cBuffers[1]{ view.getCameraBuffer() };
+
+		deviceContext->VSSetConstantBuffers(0, 1, cBuffers);
 
 		deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		

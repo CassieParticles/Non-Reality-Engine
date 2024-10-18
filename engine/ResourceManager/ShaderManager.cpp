@@ -26,7 +26,6 @@ VertexShader* ShaderManager::getVertexShader(const std::wstring& filePath)
 	if (val == vertexShaders.end())
 	{
 		//Shader not found, creating
-		std::cout << "Not found\n";
 		vertexShaders.emplace(key, std::make_unique<VertexShader>(device.Get(),filePath));
 		val = vertexShaders.find(key);
 	}
@@ -42,7 +41,6 @@ PixelShader* ShaderManager::getPixelShader(const std::wstring& filePath)
 	if (val == pixelShaders.end())
 	{
 		//Shader not found, creating
-		std::cout << "Not found\n";
 		pixelShaders.emplace(key, std::make_unique<PixelShader>(device.Get(), filePath));
 		val = pixelShaders.find(key);
 	}
