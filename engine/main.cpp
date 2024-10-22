@@ -1,5 +1,7 @@
 #include <iostream>
 
+#include <engine/VectorMathOverloads.h>
+
 #include <engine/Window.h>
 #include <engine/View.h>
 
@@ -19,7 +21,7 @@ int main()
 
 	std::unique_ptr<ShaderManager> shaderManager= std::make_unique<ShaderManager>( device );
 	
-	View view{ device.Get(),{0,0,-10} };
+	View view{ device.Get(),{0,0,-2} };
 
 	view.setProjectionMatrixPespective(90 * 3.14159 / 180, window->getAspectRatio(), 0.1f, 1000.f);
 
@@ -97,6 +99,9 @@ int main()
 		window->clearBackBuffer();
 		window->bindRenderTarget();
 
+
+		view.setRotation(view.loadRotation() + DirectX::XMVECTOR{0, 0.001f, 0, 0});
+
 		view.updateView(deviceContext.Get());
 
 		inputLayout.useInputLayout(deviceContext.Get());
@@ -104,6 +109,8 @@ int main()
 
 		vs->bindShader(deviceContext.Get());
 		ps->bindShader(deviceContext.Get());
+
+
 
 		ID3D11Buffer* cBuffers[1]{ view.getCameraBuffer() };
 
