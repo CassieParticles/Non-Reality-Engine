@@ -8,7 +8,13 @@
 #include <engine/Pipeline/InputLayout.h>
 #include <engine/Pipeline/Mesh.h>
 
+#include <glfw3.h>
+
+
 #include <engine/ResourceManager/ShaderManager.cpp>
+
+#include <engine/Input.h>
+
 
 #include <string>
 
@@ -25,6 +31,7 @@ int main()
 
 	view.setProjectionMatrixPespective(90 * 3.14159 / 180, window->getAspectRatio(), 0.1f, 1000.f);
 
+	Input* input = window->getInput();
 
 	Mesh mesh{};
 
@@ -99,8 +106,15 @@ int main()
 		window->clearBackBuffer();
 		window->bindRenderTarget();
 
+		if (input->getKeyDown(GLFW_KEY_D))
+		{
+			view.setRotation(view.loadRotation() + DirectX::XMVECTOR{0, 0.001f, 0, 0});
+		}
+		if (input->getKeyDown(GLFW_KEY_A))
+		{
+			view.setRotation(view.loadRotation() + DirectX::XMVECTOR{0, -0.001f, 0, 0});
 
-		view.setRotation(view.loadRotation() + DirectX::XMVECTOR{0, 0.001f, 0, 0});
+		}
 
 		view.updateView(deviceContext.Get());
 

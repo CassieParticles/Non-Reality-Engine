@@ -5,6 +5,7 @@ list(APPEND GAME "engine/main.cpp")
 
 list(APPEND ENGINE "engine/ResourceManager/ShaderManager.cpp")
 
+
 cmake_minimum_required (VERSION 3.8)
 project("app")
 
