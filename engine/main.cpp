@@ -136,9 +136,6 @@ int main()
 		deviceContext->VSSetConstantBuffers(0, 1, cBuffers);
 
 		deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		
-
-		//deviceContext->DrawIndexed(3, 0, 0);
 
 		mesh2->useMesh(deviceContext.Get());
 

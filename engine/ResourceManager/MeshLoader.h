@@ -18,7 +18,7 @@ public:
 	//Add mesh given certain vertices
 	Mesh* addMesh(const std::string& name, Mesh::MeshVertex* meshVertices, int vertexCount, int* indices, int indexCount, bool dynamic);
 	//Load obj given file path
-	//TODO: Add .obj loading
+	//TODO: Add .obj loading to asset loader
 
 	Mesh* getMesh(const std::string& name);
 
@@ -27,7 +27,6 @@ protected:
 	std::unordered_map<int, std::unique_ptr<Mesh>> meshes;
 
 	void addPlaneMesh();
-	void addSphereMesh();
 
 	/*Types of base mesh
 	*	-Plane - Done
