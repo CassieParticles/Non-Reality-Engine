@@ -4,6 +4,7 @@
 list(APPEND GAME "engine/main.cpp")
 
 list(APPEND ENGINE "engine/ResourceManager/ShaderManager.cpp")
+list(APPEND ENGINE "engine/ResourceManager/MeshLoader.cpp")
 
 
 cmake_minimum_required (VERSION 3.8)

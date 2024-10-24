@@ -12,8 +12,10 @@
 
 
 #include <engine/ResourceManager/ShaderManager.cpp>
+#include <engine/ResourceManager/MeshLoader.h>
 
 #include <engine/Input.h>
+
 
 
 #include <string>
@@ -26,14 +28,17 @@ int main()
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext = window->getDeviceContext();
 
 	std::unique_ptr<ShaderManager> shaderManager= std::make_unique<ShaderManager>( device );
+
+	std::unique_ptr<MeshLoader> meshLoader = std::make_unique<MeshLoader>(device);
 	
-	View view{ device.Get(),{0,0,-2} };
+	View view{ device.Get(),{0,1,-3} };
 
 	view.setProjectionMatrixPespective(90 * 3.14159 / 180, window->getAspectRatio(), 0.1f, 1000.f);
 
 	Input* input = window->getInput();
 
-	Mesh mesh{};
+	Mesh* mesh;
+	Mesh* mesh2;
 
 	Mesh::MeshVertex vertices[3]
 	{
@@ -59,8 +64,8 @@ int main()
 		0,1,2
 	};
 
-
-	mesh.addVertices(device.Get(), vertices, 3, indices, 3, false);
+	mesh = meshLoader->addMesh("test Triangle", vertices, 3, indices, 3, false);
+	mesh2 = meshLoader->getMesh("Plane");
 
 	InputLayout inputLayout{};
 
@@ -119,7 +124,7 @@ int main()
 		view.updateView(deviceContext.Get());
 
 		inputLayout.useInputLayout(deviceContext.Get());
-		mesh.useMesh(deviceContext.Get());
+		mesh->useMesh(deviceContext.Get());
 
 		vs->bindShader(deviceContext.Get());
 		ps->bindShader(deviceContext.Get());
@@ -133,7 +138,11 @@ int main()
 		deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		
 
-		deviceContext->DrawIndexed(3, 0, 0);
+		//deviceContext->DrawIndexed(3, 0, 0);
+
+		mesh2->useMesh(deviceContext.Get());
+
+		deviceContext->DrawIndexed(mesh2->getVertexCount(), 0, 0);
 
 		window->presentBackBuffer();
 	}
