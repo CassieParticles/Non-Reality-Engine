@@ -9,5 +9,5 @@ public:
 	UpdateComponent(UpdateComponent&& other) :Component{ other } {}
 
 	//TODO: Add time manager
-	void Update();
+	virtual void Update() = 0;
 };

@@ -12,6 +12,7 @@ GameObject::GameObject(GameObject& other):transformComponent{other.transformComp
 
 GameObject::GameObject(GameObject&& other):transformComponent{std::move(other.transformComponent)}
 {
+
 }
 
 GameObject::~GameObject()

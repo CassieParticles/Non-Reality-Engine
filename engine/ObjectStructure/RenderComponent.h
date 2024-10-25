@@ -8,5 +8,6 @@ public:
 	RenderComponent(RenderComponent& other) :Component{ other } {}
 	RenderComponent(RenderComponent&& other) :Component{ other } {}
 
-	void Render();
+	//TODO: Add time manager
+	virtual void Render() = 0;
 };

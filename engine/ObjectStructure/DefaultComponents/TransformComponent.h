@@ -32,6 +32,8 @@ public:
 		return *this;
 	}
 
+	void Action() override {}
+
 	//Position in space
 	DirectX::XMFLOAT3 position;
 	DirectX::XMFLOAT3 rotation;

@@ -16,7 +16,9 @@
 
 #include <graphicsEngine/Input.h>
 
+#include <engine/ObjectStructure/GameObject.h>
 
+#include <engine/Rendering/MeshComponent.h>
 
 #include <string>
 
@@ -30,6 +32,10 @@ int main()
 	std::unique_ptr<ShaderManager> shaderManager= std::make_unique<ShaderManager>( device );
 
 	std::unique_ptr<MeshLoader> meshLoader = std::make_unique<MeshLoader>(device);
+
+	GameObject gameObject{device,deviceContext};
+
+	gameObject.addComponent<MeshComponent>();
 	
 	View view{ device.Get(),{0,1,-3} };
 

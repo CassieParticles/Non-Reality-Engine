@@ -8,6 +8,8 @@ list(APPEND ENGINE "engine/ResourceManager/MeshLoader.cpp")
 
 list(APPEND ENGINE "engine/ObjectStructure/GameObject.cpp")
 
+list(APPEND ENGINE "engine/Rendering/MeshComponent.cpp")
+
 
 cmake_minimum_required (VERSION 3.8)
 project("app")
