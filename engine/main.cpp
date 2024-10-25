@@ -1,12 +1,12 @@
 #include <iostream>
 
-#include <engine/VectorMathOverloads.h>
+#include <graphicsEngine/VectorMathOverloads.h>
 
-#include <engine/Window.h>
-#include <engine/View.h>
+#include <graphicsEngine/Window.h>
+#include <graphicsEngine/View.h>
 
-#include <engine/Pipeline/InputLayout.h>
-#include <engine/Pipeline/Mesh.h>
+#include <graphicsEngine/Pipeline/InputLayout.h>
+#include <graphicsEngine/Pipeline/Mesh.h>
 
 #include <glfw3.h>
 
@@ -14,7 +14,7 @@
 #include <engine/ResourceManager/ShaderManager.cpp>
 #include <engine/ResourceManager/MeshLoader.h>
 
-#include <engine/Input.h>
+#include <graphicsEngine/Input.h>
 
 
 
@@ -135,7 +135,7 @@ int main()
 
 		deviceContext->VSSetConstantBuffers(0, 1, cBuffers);
 
-		deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
 
 		mesh2->useMesh(deviceContext.Get());
 
