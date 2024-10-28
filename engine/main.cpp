@@ -36,42 +36,22 @@ int main()
 	GameObject gameObject{device,deviceContext};
 
 	gameObject.addRenderComponent<MeshComponent>();
-	
-	View view{ device.Get(),{0,1,-3} };
 
-	view.setProjectionMatrixPespective(90 * 3.14159 / 180, window->getAspectRatio(), 0.1f, 1000.f);
+	MeshComponent* meshComp = gameObject.getComponent<MeshComponent>();
+	meshComp->setMesh("Plane",meshLoader.get());
+	TransformComponent* transComp = gameObject.getComponent<TransformComponent>();
+	transComp->scale.x = 20;
+	transComp->scale.y = 2;
+	transComp->scale.z = 2;
+	transComp->position.x = 3;
+
+	//transComp->rotation.x = 3.14159 / 4;
+	
+	View view{ device.Get(),{0,1,-5} };
+
+	view.setProjectionMatrixPespective(45 * 3.14159f / 180, window->getAspectRatio(), 0.1f, 1000.f);
 
 	Input* input = window->getInput();
-
-	Mesh* mesh;
-	Mesh* mesh2;
-
-	Mesh::MeshVertex vertices[3]
-	{
-		{	//Vertex 0
-			DirectX::XMFLOAT3(0.0f,0.5f,0.1f),
-			DirectX::XMFLOAT3(0,0, 1),
-			DirectX::XMFLOAT2(0.5,0.0)
-		},
-		{	//Vertex 1
-			DirectX::XMFLOAT3(0.5f,-0.5f,0.1f),
-			DirectX::XMFLOAT3(0,0, 1),
-			DirectX::XMFLOAT2(1.0,1.0)
-		},
-		{	//Vertex 2
-			DirectX::XMFLOAT3(-0.5f,-0.5f,0.1f),
-			DirectX::XMFLOAT3(0,0, 1),
-			DirectX::XMFLOAT2(0.0,1.0)
-		},
-	};
-
-	int indices[3]
-	{
-		0,1,2
-	};
-
-	mesh = meshLoader->addMesh("test Triangle", vertices, 3, indices, 3, false);
-	mesh2 = meshLoader->getMesh("Plane");
 
 	InputLayout inputLayout{};
 
@@ -114,6 +94,8 @@ int main()
 
 	while (!window->getWindowShouldClose())
 	{
+		transComp->rotation.y += 0.001f;
+
 		window->clearBackBuffer();
 		window->bindRenderTarget();
 

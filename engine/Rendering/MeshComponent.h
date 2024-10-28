@@ -19,4 +19,6 @@ public:
 	void Render() override;
 protected:
 	Mesh* mesh;
+
+	Microsoft::WRL::ComPtr<ID3D11Buffer> worldMatrixBuffer;
 };
