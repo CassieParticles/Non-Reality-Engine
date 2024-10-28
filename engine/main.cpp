@@ -35,7 +35,7 @@ int main()
 
 	GameObject gameObject{device,deviceContext};
 
-	gameObject.addComponent<MeshComponent>();
+	gameObject.addRenderComponent<MeshComponent>();
 	
 	View view{ device.Get(),{0,1,-3} };
 
@@ -130,7 +130,7 @@ int main()
 		view.updateView(deviceContext.Get());
 
 		inputLayout.useInputLayout(deviceContext.Get());
-		mesh->useMesh(deviceContext.Get());
+		//mesh->useMesh(deviceContext.Get());
 
 		vs->bindShader(deviceContext.Get());
 		ps->bindShader(deviceContext.Get());
@@ -143,9 +143,8 @@ int main()
 
 
 
-		mesh2->useMesh(deviceContext.Get());
-
-		deviceContext->DrawIndexed(mesh2->getVertexCount(), 0, 0);
+		//mesh2->useMesh(deviceContext.Get());
+		meshComp->Render();
 
 		window->presentBackBuffer();
 	}

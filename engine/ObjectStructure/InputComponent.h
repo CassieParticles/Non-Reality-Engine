@@ -8,7 +8,6 @@ public:
 	InputComponent(InputComponent& other) :Component{ other } {}
 	InputComponent(InputComponent&& other) :Component{ other } {}
 	
-
 	//TODO: Add time manager
 	virtual void Input() = 0;
 };

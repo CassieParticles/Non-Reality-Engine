@@ -29,10 +29,15 @@ public:
 
 	//Definition needs to exist within header file
 	template<typename T>
-	T* addComponent()
+	T* addDataComponent()
 	{
-		//Get the type of component T is
-		if (std::is_base_of<DataComponent,T>())
+		//Ensure 2 transform components do not exist
+		if (std::is_base_of<TransformComponent, T>)
+		{
+			return &transformComponent;
+		}
+		//Check if component exists
+		for (int i = 0; i < dataComponents.size(); ++i)
 		{
 			//Check if the component already exists
 			for (int i = 0; i < dataComponents.size(); ++i)
@@ -44,9 +49,87 @@ public:
 					return compTest;
 				}
 			}
-			//dataComponents.emplace_back(std::make_unique<T>(this));
-		
+			dataComponents.emplace_back(std::make_unique<T>(this));
+			//Component last element in array, add
+			return dynamic_cast<T*>(dataComponents.at(dataComponents.size() - 1).get());
 		}
+	}
+
+	template<typename T>
+	T* addInputComponent()
+	{
+		//Check if the component already exists
+		for (int i = 0; i < inputComponents.size(); ++i)
+		{
+			InputComponent* component = inputComponents.at(i).get();
+			T* compTest = dynamic_cast<T*>(component);
+			if (compTest)
+			{
+				return compTest;
+			}
+		}
+		inputComponents.emplace_back(std::make_unique<T>(this));
+		return dynamic_cast<T*>(inputComponents.at(inputComponents.size() - 1).get());
+	}
+
+	template<typename T>
+	T* addUpdateComponent()
+	{
+		//Check if the component already exists
+		for (int i = 0; i < updateComponents.size(); ++i)
+		{
+			UpdateComponent* component = updateComponents.at(i).get();
+			T* compTest = dynamic_cast<T*>(component);
+			if (compTest)
+			{
+				return compTest;
+			}
+		}
+		updateComponents.emplace_back(std::make_unique<T>(this));
+		return dynamic_cast<T*>(updateComponents.at(updateComponents.size() - 1).get());
+	}
+
+	template<typename T>
+	T* addRenderComponent()
+	{
+		//Check if the component already exists
+		for (int i = 0; i < renderComponents.size(); ++i)
+		{
+			RenderComponent* component = renderComponents.at(i).get();
+			T* compTest = dynamic_cast<T*>(component);
+			if (compTest)
+			{
+				return compTest;
+			}
+		}
+		renderComponents.emplace_back(std::make_unique<T>(this));
+		return dynamic_cast<T*>(renderComponents.at(renderComponents.size() - 1).get());
+	}
+
+	template<typename T>
+	T* getComponent()
+	{
+		//Check if the component is the transform component
+		if (std::is_base_of<TransformComponent, T>())
+		{
+			//Technically an unsafe cast, but the only time this will call is when T is type TransformComponent anyway
+			return (T*)(&transformComponent);
+		}
+		//Get data component
+		if (std::is_base_of<DataComponent, T>())
+		{
+			//Check if the component already exists
+			for (int i = 0; i < dataComponents.size(); ++i)
+			{
+				DataComponent* component = dataComponents.at(i).get();
+				T* compTest = dynamic_cast<T*>(component);
+				if (compTest)
+				{
+					return compTest;
+				}
+			}
+		}
+		//Get input component
 		if (std::is_base_of<InputComponent, T>())
 		{
 			//Check if the component already exists
@@ -59,8 +142,8 @@ public:
 					return compTest;
 				}
 			}
-			//inputComponents.emplace_back(std::make_unique<T>(this));
 		}
+		//Get update component
 		if (std::is_base_of<UpdateComponent, T>())
 		{
 			//Check if the component already exists
@@ -73,8 +156,8 @@ public:
 					return compTest;
 				}
 			}
-			//updateComponents.emplace_back(std::make_unique<T>(this));
 		}
+		//Get render component
 		if (std::is_base_of<RenderComponent, T>())
 		{
 			//Check if the component already exists
@@ -87,18 +170,13 @@ public:
 					return compTest;
 				}
 			}
-			//Component does not yet exist, so create it
-			//renderComponents.emplace_back(std::make_unique<T>(this));
 		}
 
+		//Couldn't find component, return nullptr
 		return nullptr;
 	}
 
-	template<typename T>
-	T* getComponent()
-	{
 
-	}
 protected:
 	ComPtr<ID3D11Device> device;
 	ComPtr<ID3D11DeviceContext> deviceContext;
