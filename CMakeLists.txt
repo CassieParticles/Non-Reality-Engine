@@ -9,6 +9,7 @@ list(APPEND ENGINE "engine/ObjectStructure/GameObject.cpp")
 
 list(APPEND ENGINE "engine/Rendering/MeshComponent.cpp")
 
+list(APPEND ENGINE "engine/BaseGameLoop.cpp")
 
 cmake_minimum_required (VERSION 3.8)
 
