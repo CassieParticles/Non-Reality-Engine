@@ -44,8 +44,8 @@ void MeshComponent::Render()
 	TransformComponent* trans = gameObject->getComponent<TransformComponent>();
 	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixIdentity();
 	worldMatrix = DirectX::XMMatrixTranslation(trans->position.x, trans->position.y, trans->position.z) * worldMatrix;
-	worldMatrix = DirectX::XMMatrixScaling(trans->scale.x, trans->scale.y, trans->scale.z) * worldMatrix;
 	worldMatrix = DirectX::XMMatrixRotationRollPitchYaw(trans->rotation.x,trans->rotation.y,trans->rotation.z) * worldMatrix;
+	worldMatrix = DirectX::XMMatrixScaling(trans->scale.x, trans->scale.y, trans->scale.z) * worldMatrix;
 	
 	D3D11_MAPPED_SUBRESOURCE map{};
 	HRESULT err = deviceContext->Map(worldMatrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
