@@ -11,31 +11,39 @@ class MeshLoader;
 class VertexShader;
 class PixelShader;
 
+#include <graphicsEngine/Input.h>
+#include <graphicsEngine/View.h>
+
 //TEMP - Will be put in renderer
 #include <graphicsEngine/Pipeline/InputLayout.h>
 
 class BaseGameLoop
 {
+	template <typename T>
+	using ComPtr = Microsoft::WRL::ComPtr<T>;
 public:
 	BaseGameLoop(const std::string& windowName, int windowWidth, int windowHeight);
 	~BaseGameLoop();
 
-	void handleInputs();
-	void update();
-	void render();
+	virtual void handleInput();
+	virtual void update();
+	virtual void render();
 protected:
 	//Systems
 	std::unique_ptr<Window> window;
 	std::unique_ptr<ShaderManager> shaderManager;
 	std::unique_ptr<MeshLoader> meshLoader;
 
+	ComPtr<ID3D11Device> device;
+	ComPtr<ID3D11DeviceContext> deviceContext;
+	//TEMP - Improved input system will be created
+	Input* input;
+
 private:
 	VertexShader* baseVertexShader;
 	PixelShader* basePixelShader;
 
-	//TEMP - Improved input system will be created
-	//Input* input;
-	Input* input;
+
 
 	//TEMP - Will be put in renderer
 	InputLayout inputLayout;

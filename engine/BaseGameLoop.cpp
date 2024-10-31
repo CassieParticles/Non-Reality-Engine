@@ -62,7 +62,7 @@ BaseGameLoop::~BaseGameLoop()
 {
 }
 
-void BaseGameLoop::handleInputs()
+void BaseGameLoop::handleInput()
 {
 }
 
