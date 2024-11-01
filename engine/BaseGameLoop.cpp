@@ -10,8 +10,8 @@ BaseGameLoop::BaseGameLoop(const std::string& windowName, int windowWidth, int w
 	window = std::make_unique<Window>(windowName, 800, 600);
 
 	//Get the device and device context
-	Microsoft::WRL::ComPtr<ID3D11Device> device = window->getDevice();
-	Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext = window->getDeviceContext();
+	device = window->getDevice();
+	deviceContext = window->getDeviceContext();
 
 	//Initialize other systems
 	shaderManager = std::make_unique<ShaderManager>(device);

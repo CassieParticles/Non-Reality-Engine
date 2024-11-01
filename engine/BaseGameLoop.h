@@ -39,12 +39,12 @@ protected:
 	//TEMP - Improved input system will be created
 	Input* input;
 
-private:
+	//TEMP - Will be put in renderer
+	InputLayout inputLayout;
+
+	//TEMP - This will be private when shaders aren't directly needed
+protected:
 	VertexShader* baseVertexShader;
 	PixelShader* basePixelShader;
 
-
-
-	//TEMP - Will be put in renderer
-	InputLayout inputLayout;
 };
