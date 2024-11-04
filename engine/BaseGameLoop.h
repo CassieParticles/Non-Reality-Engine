@@ -28,6 +28,8 @@ public:
 	virtual void handleInput();
 	virtual void update();
 	virtual void render();
+
+	bool getShouldClose() { return window->getWindowShouldClose(); }
 protected:
 	//Systems
 	std::unique_ptr<Window> window;

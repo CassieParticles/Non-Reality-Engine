@@ -64,6 +64,7 @@ BaseGameLoop::~BaseGameLoop()
 
 void BaseGameLoop::handleInput()
 {
+	input->Update();
 }
 
 void BaseGameLoop::update()

@@ -4,7 +4,7 @@
 #include <DirectXMath.h>
 
 
-class TransformComponent: public DataComponent
+class TransformComponent final: public DataComponent
 {
 public:
 	TransformComponent(GameObject* gameObject, DirectX::XMFLOAT3 position = { 0,0,0 }, DirectX::XMFLOAT3 rotation = { 0,0,0 }, DirectX::XMFLOAT3 scale = { 1,1,1 }, int layer = 0)
