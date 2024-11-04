@@ -1,4 +1,5 @@
 #include "MeshLoader.h"
+#include "MeshLoader.h"
 
 #include <iostream>
 #include <DirectXMath.h>
@@ -6,6 +7,7 @@
 MeshLoader::MeshLoader(Microsoft::WRL::ComPtr<ID3D11Device> device):device{device}
 {
 	addPlaneMesh();
+	addCubeMesh();
 }
 
 MeshLoader::MeshLoader(MeshLoader&& other)
@@ -91,4 +93,65 @@ void MeshLoader::addPlaneMesh()
 	addMesh("Plane", vertices, (gridSize + 1) * (gridSize + 1), indices, gridSize * gridSize * 6, false);
 
 	delete[] vertices;
+}
+
+void MeshLoader::addCubeMesh()
+{
+	Mesh::MeshVertex cubeVertices[6 * 4]
+	{
+		//+X
+		{{1,0,0},{1,0,0},{0,1}},
+		{{1,1,0},{1,0,0},{0,0}},
+		{{1,1,1},{1,0,0},{1,0}},
+		{{1,0,1},{1,0,0},{1,1}},
+		//+Z
+		{{1,0,1},{0,0,1},{0,1}},
+		{{1,1,1},{0,0,1},{0,0}},
+		{{0,1,1},{0,0,1},{1,0}},
+		{{0,0,1},{0,0,1},{1,1}},
+		//-X
+		{{0,0,1},{-1,0,0},{0,1}},
+		{{0,1,1},{-1,0,0},{0,0}},
+		{{0,1,0},{-1,0,0},{1,0}},
+		{{0,0,0},{-1,0,0},{1,1}},
+		//-Z
+		{{0,0,0},{0,0,-1},{0,1}},
+		{{0,1,0},{0,0,-1},{0,0}},
+		{{1,1,0},{0,0,-1},{1,0}},
+		{{1,0,0},{0,0,-1},{1,1}},
+		//+Y
+		{{1,1,0},{0,1,0},{0,1}},
+		{{0,1,0},{0,1,0},{0,0}},
+		{{0,1,1},{0,1,0},{1,0}},
+		{{1,1,1},{0,1,0},{1,1}},
+		//-Y
+		{{1,0,1},{0,-1,0},{0,1}},
+		{{0,0,1},{0,-1,0},{0,0}},
+		{{0,0,0},{0,-1,0},{1,0}},
+		{{1,0,0},{0,-1,0},{1,1}},
+	};
+
+	int indices[6 * 6]
+	{
+		//+X
+		0,1,2,
+		0,2,3,
+		//+Z
+		4,5,6,
+		4,6,7,
+		//-X
+		8,9,10,
+		8,10,11,
+		//-Z
+		12,13,14,
+		12,14,15,
+		//+Y
+		16,17,18,
+		16,18,19,
+		//-Y
+		20,21,22,
+		20,22,23
+	};
+
+	addMesh("Cube", cubeVertices, 6 * 4, indices, 6 * 6, false);
 }

@@ -27,6 +27,7 @@ protected:
 	std::unordered_map<int, std::unique_ptr<Mesh>> meshes;
 
 	void addPlaneMesh();
+	void addCubeMesh();
 
 	/*Types of base mesh
 	*	-Plane - Done
