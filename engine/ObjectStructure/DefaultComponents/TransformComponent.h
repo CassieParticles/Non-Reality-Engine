@@ -10,29 +10,17 @@ public:
 	TransformComponent(GameObject* gameObject, DirectX::XMFLOAT3 position = { 0,0,0 }, DirectX::XMFLOAT3 rotation = { 0,0,0 }, DirectX::XMFLOAT3 scale = { 1,1,1 }, int layer = 0)
 		:DataComponent{ gameObject },position {position}, rotation{ rotation }, scale{ scale }, layer{ layer } {}
 
-	TransformComponent(TransformComponent& other) :DataComponent{other} { position = other.position; rotation = other.rotation; scale = other.scale; layer = other.layer; }
-	TransformComponent(TransformComponent&& other):DataComponent{other}
-	{
-		position = std::move(other.position);
-		rotation = std::move(other.rotation);
-		scale = std::move(other.scale);
-		layer = std::move(other.layer);
+	TransformComponent(TransformComponent& other);
+	TransformComponent(TransformComponent&& other);
 
-		gameObject = std::move(other.gameObject);
-	}
-
-	TransformComponent& operator=(TransformComponent& other)
-	{
-		position = other.position;
-		rotation = other.rotation;
-		scale = other.scale;
-		layer = other.layer;
-		gameObject = other.gameObject;
-
-		return *this;
-	}
+	TransformComponent& operator=(TransformComponent& other);
 
 	void Action() override {}
+
+	//For use in meshes and rendered objects
+	DirectX::XMMATRIX calcWorldMatrix();
+	//For use in views
+	DirectX::XMMATRIX calcViewMatrix();
 
 	//Position in space
 	DirectX::XMFLOAT3 position;

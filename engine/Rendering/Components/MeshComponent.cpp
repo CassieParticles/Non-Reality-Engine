@@ -1,4 +1,5 @@
 #include "MeshComponent.h"
+#include "MeshComponent.h"
 
 #include <engine/ObjectStructure/GameObject.h>
 #include <iostream>
@@ -35,17 +36,14 @@ void MeshComponent::setMesh(const std::string& name, MeshLoader* meshLoader)
 	mesh = meshLoader->getMesh(name);
 }
 
+
+
 void MeshComponent::Render()
 {
 	//Get device context
 	ID3D11DeviceContext* deviceContext = gameObject->getDeviceContext();
 
-	//Update mesh world matrix
-	TransformComponent* trans = gameObject->getComponent<TransformComponent>();
-	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixIdentity();
-	worldMatrix = DirectX::XMMatrixTranslation(trans->position.x, trans->position.y, trans->position.z) * worldMatrix;
-	worldMatrix = DirectX::XMMatrixRotationRollPitchYaw(trans->rotation.x,trans->rotation.y,trans->rotation.z) * worldMatrix;
-	worldMatrix = DirectX::XMMatrixScaling(trans->scale.x, trans->scale.y, trans->scale.z) * worldMatrix;
+	DirectX::XMMATRIX worldMatrix = gameObject->getComponent<TransformComponent>()->calcWorldMatrix();
 	
 	D3D11_MAPPED_SUBRESOURCE map{};
 	HRESULT err = deviceContext->Map(worldMatrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
