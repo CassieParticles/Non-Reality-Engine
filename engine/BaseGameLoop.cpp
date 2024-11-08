@@ -3,6 +3,7 @@
 #include <graphicsEngine/Window.h>
 #include <engine/ResourceManager/ShaderManager.h>
 #include <engine/ResourceManager/MeshLoader.h>
+#include <engine/Rendering/Renderer.h>
 
 BaseGameLoop::BaseGameLoop(const std::string& windowName, int windowWidth, int windowHeight)
 {
@@ -17,45 +18,48 @@ BaseGameLoop::BaseGameLoop(const std::string& windowName, int windowWidth, int w
 	shaderManager = std::make_unique<ShaderManager>(device);
 	meshLoader = std::make_unique<MeshLoader>(device);
 
-	//Compile shaders for the engine
-	baseVertexShader = shaderManager->getVertexShader(L"shaders/vertex.hlsl");
-	basePixelShader = shaderManager->getPixelShader(L"shaders/fragment.hlsl");
+	renderer = std::make_unique<Renderer>(device, deviceContext, shaderManager.get(), 1024);
 
 	input = window->getInput();
 
-	//TEMP - This will be in renderer
-	D3D11_INPUT_ELEMENT_DESC inputArr[3]
-	{
-		{
-			"POSITION",
-			0,
-			DXGI_FORMAT_R32G32B32_FLOAT,
-			0,
-			0,
-			D3D11_INPUT_PER_VERTEX_DATA,
-			0
-		},
-		{
-			"NORMAL",
-			0,
-			DXGI_FORMAT_R32G32B32_FLOAT,
-			0,
-			sizeof(float) * 3,
-			D3D11_INPUT_PER_VERTEX_DATA,
-			0
-		},
-		{
-			"TEXCOORD",
-			0,
-			DXGI_FORMAT_R32G32_FLOAT,
-			0,
-			sizeof(float) * 6,
-			D3D11_INPUT_PER_VERTEX_DATA,
-			0
-		},
-	};
+	//Compile shaders for the engine
+	//baseVertexShader = shaderManager->getVertexShader(L"shaders/vertex.hlsl");
+	//basePixelShader = shaderManager->getPixelShader(L"shaders/fragment.hlsl");
 
-	inputLayout.addInputLayout(device.Get(), baseVertexShader->getByteCode(), inputArr, 3);
+
+	//TEMP - This will be in renderer
+	//D3D11_INPUT_ELEMENT_DESC inputArr[3]
+	//{
+	//	{
+	//		"POSITION",
+	//		0,
+	//		DXGI_FORMAT_R32G32B32_FLOAT,
+	//		0,
+	//		0,
+	//		D3D11_INPUT_PER_VERTEX_DATA,
+	//		0
+	//	},
+	//	{
+	//		"NORMAL",
+	//		0,
+	//		DXGI_FORMAT_R32G32B32_FLOAT,
+	//		0,
+	//		sizeof(float) * 3,
+	//		D3D11_INPUT_PER_VERTEX_DATA,
+	//		0
+	//	},
+	//	{
+	//		"TEXCOORD",
+	//		0,
+	//		DXGI_FORMAT_R32G32_FLOAT,
+	//		0,
+	//		sizeof(float) * 6,
+	//		D3D11_INPUT_PER_VERTEX_DATA,
+	//		0
+	//	},
+	//};
+
+	//inputLayout.addInputLayout(device.Get(), baseVertexShader->getByteCode(), inputArr, 3);
 }
 
 BaseGameLoop::~BaseGameLoop()

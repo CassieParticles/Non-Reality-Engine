@@ -13,13 +13,15 @@
 #include "UpdateComponent.h"
 #include "RenderComponent.h"
 
+#include <engine/Rendering/Renderer.h>
+
 
 class GameObject
 {
 	template<typename T>
 	using ComPtr = Microsoft::WRL::ComPtr<T>;
 public:
-	GameObject(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> deviceContext);
+	GameObject(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> deviceContext, Renderer* renderer);
 	GameObject(GameObject& other);
 	GameObject(GameObject&& other);
 	~GameObject();
@@ -102,7 +104,7 @@ public:
 				return compTest;
 			}
 		}
-		renderComponents.emplace_back(std::make_unique<T>(this));
+		renderComponents.emplace_back(std::make_unique<T>(this,renderer));
 		return dynamic_cast<T*>(renderComponents.at(renderComponents.size() - 1).get());
 	}
 
@@ -180,6 +182,8 @@ public:
 protected:
 	ComPtr<ID3D11Device> device;
 	ComPtr<ID3D11DeviceContext> deviceContext;
+
+	Renderer* renderer;
 
 	TransformComponent transformComponent;
 

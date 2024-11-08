@@ -7,6 +7,7 @@ class Window;
 class Input;
 class ShaderManager;
 class MeshLoader;
+class Renderer;
 
 class VertexShader;
 class PixelShader;
@@ -35,6 +36,7 @@ protected:
 	std::unique_ptr<Window> window;
 	std::unique_ptr<ShaderManager> shaderManager;
 	std::unique_ptr<MeshLoader> meshLoader;
+	std::unique_ptr<Renderer> renderer;
 
 	ComPtr<ID3D11Device> device;
 	ComPtr<ID3D11DeviceContext> deviceContext;

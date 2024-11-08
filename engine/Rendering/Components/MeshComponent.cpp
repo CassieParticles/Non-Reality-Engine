@@ -4,7 +4,7 @@
 #include <engine/ObjectStructure/GameObject.h>
 #include <iostream>
 
-MeshComponent::MeshComponent(GameObject* gameObject) :RenderComponent{ gameObject }, mesh{ nullptr }
+MeshComponent::MeshComponent(GameObject* gameObject, Renderer* renderer) :RenderComponent{ gameObject,renderer }, mesh{ nullptr }
 {
 	D3D11_BUFFER_DESC desc{};
 	desc.ByteWidth = sizeof(DirectX::XMMATRIX);
@@ -17,12 +17,12 @@ MeshComponent::MeshComponent(GameObject* gameObject) :RenderComponent{ gameObjec
 	gameObject->getDevice()->CreateBuffer(&desc, 0, &worldMatrixBuffer);
 }
 
-MeshComponent::MeshComponent(MeshComponent& other):RenderComponent{gameObject}
+MeshComponent::MeshComponent(MeshComponent& other):RenderComponent{gameObject,renderer}
 {
 	mesh = other.mesh;
 }
 
-MeshComponent::MeshComponent(MeshComponent&& other):RenderComponent{gameObject}
+MeshComponent::MeshComponent(MeshComponent&& other):RenderComponent{gameObject,renderer}
 {
 	mesh = std::move(other.mesh);
 }
@@ -44,20 +44,24 @@ void MeshComponent::Render()
 	ID3D11DeviceContext* deviceContext = gameObject->getDeviceContext();
 
 	DirectX::XMMATRIX worldMatrix = gameObject->getComponent<TransformComponent>()->calcWorldMatrix();
-	
-	D3D11_MAPPED_SUBRESOURCE map{};
-	HRESULT err = deviceContext->Map(worldMatrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
-	if (FAILED(err))
-	{
-		std::cerr << "Uh oh\n";
-	}
-	memcpy(map.pData, &worldMatrix, sizeof(worldMatrix));
-	deviceContext->Unmap(worldMatrixBuffer.Get(), 0);
+	DirectX::XMFLOAT4X4 worldMatrixSta;
+	DirectX::XMStoreFloat4x4(&worldMatrixSta, worldMatrix);
 
-	mesh->useMesh(deviceContext);
+	renderer->addRenderCall<DrawMesh>({ 0,mesh,worldMatrixSta });
 
-	deviceContext->VSSetConstantBuffers(1, 1, worldMatrixBuffer.GetAddressOf());
+	//D3D11_MAPPED_SUBRESOURCE map{};
+	//HRESULT err = deviceContext->Map(worldMatrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+	//if (FAILED(err))
+	//{
+	//	std::cerr << "Uh oh\n";
+	//}
+	//memcpy(map.pData, &worldMatrix, sizeof(worldMatrix));
+	//deviceContext->Unmap(worldMatrixBuffer.Get(), 0);
 
-	deviceContext->DrawIndexed(mesh->getVertexCount(), 0, 0);
+	//mesh->useMesh(deviceContext);
+
+	//deviceContext->VSSetConstantBuffers(1, 1, worldMatrixBuffer.GetAddressOf());
+
+	//deviceContext->DrawIndexed(mesh->getVertexCount(), 0, 0);
 }
 

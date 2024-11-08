@@ -1,6 +1,6 @@
 #include "GameObject.h"
 
-GameObject::GameObject(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> deviceContext) :device{ device }, deviceContext{ deviceContext }, transformComponent{ this }
+GameObject::GameObject(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> deviceContext, Renderer* renderer) :device{ device }, deviceContext{ deviceContext },renderer{renderer}, transformComponent{this}
 {
 
 }
