@@ -115,7 +115,7 @@ void Renderer::setMainCamera()
 	TransformComponent* transform = mainCamera->getComponent<TransformComponent>();
 
 	DirectX::XMMATRIX cameraMatrix = camera->getProjectionMatrix();
-	cameraMatrix = cameraMatrix * transform->calcViewMatrix();
+	cameraMatrix = transform->calcViewMatrix() * cameraMatrix;
 
 	D3D11_MAPPED_SUBRESOURCE mappedData;
 	deviceContext->Map(cameraMatrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData);
@@ -130,16 +130,12 @@ void Renderer::InitRender()
 {
 	setMainCamera();
 
-	//Clear window back buffer
-	//Set window render target
-
 	//Set shaders
 	vertexShader->bindShader(deviceContext.Get());
 	pixelShader->bindShader(deviceContext.Get());
 
 	//Set input layout
 	inputLayout.useInputLayout(deviceContext.Get());
-
 }
 
 void Renderer::RenderMesh(Mesh* mesh, DirectX::XMFLOAT4X4 worldMatrix)

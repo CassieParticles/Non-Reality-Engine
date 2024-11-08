@@ -49,5 +49,6 @@ DirectX::XMMATRIX TransformComponent::calcViewMatrix()
 
 	DirectX::XMVECTOR viewDirection = DirectX::XMVector3TransformCoord(DirectX::XMVECTOR{0, 0, 1, 1}, rotationMatrix);
 	DirectX::XMVECTOR upDirection = DirectX::XMVector3TransformCoord(DirectX::XMVECTOR{0, 1, 0, 1}, rotationMatrix);
+
 	return DirectX::XMMatrixLookToLH(DirectX::XMLoadFloat3(&position), viewDirection, upDirection);
 }

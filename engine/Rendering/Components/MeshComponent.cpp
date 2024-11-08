@@ -43,25 +43,11 @@ void MeshComponent::Render()
 	//Get device context
 	ID3D11DeviceContext* deviceContext = gameObject->getDeviceContext();
 
+	//Get world matrix of game object
 	DirectX::XMMATRIX worldMatrix = gameObject->getComponent<TransformComponent>()->calcWorldMatrix();
 	DirectX::XMFLOAT4X4 worldMatrixSta;
 	DirectX::XMStoreFloat4x4(&worldMatrixSta, worldMatrix);
 
 	renderer->addRenderCall<DrawMesh>({ 0,mesh,worldMatrixSta });
-
-	//D3D11_MAPPED_SUBRESOURCE map{};
-	//HRESULT err = deviceContext->Map(worldMatrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
-	//if (FAILED(err))
-	//{
-	//	std::cerr << "Uh oh\n";
-	//}
-	//memcpy(map.pData, &worldMatrix, sizeof(worldMatrix));
-	//deviceContext->Unmap(worldMatrixBuffer.Get(), 0);
-
-	//mesh->useMesh(deviceContext);
-
-	//deviceContext->VSSetConstantBuffers(1, 1, worldMatrixBuffer.GetAddressOf());
-
-	//deviceContext->DrawIndexed(mesh->getVertexCount(), 0, 0);
 }
 
