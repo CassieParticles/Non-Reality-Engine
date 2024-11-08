@@ -15,8 +15,7 @@ class PixelShader;
 #include <graphicsEngine/Input.h>
 #include <graphicsEngine/View.h>
 
-//TEMP - Will be put in renderer
-#include <graphicsEngine/Pipeline/InputLayout.h>
+#include <engine/SceneManagement/Scene.h>
 
 class BaseGameLoop
 {
@@ -37,6 +36,7 @@ protected:
 	std::unique_ptr<ShaderManager> shaderManager;
 	std::unique_ptr<MeshLoader> meshLoader;
 	std::unique_ptr<Renderer> renderer;
+	std::unique_ptr<Scene> scene;
 
 	ComPtr<ID3D11Device> device;
 	ComPtr<ID3D11DeviceContext> deviceContext;

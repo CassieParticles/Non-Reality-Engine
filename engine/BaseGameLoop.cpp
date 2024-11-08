@@ -20,6 +20,8 @@ BaseGameLoop::BaseGameLoop(const std::string& windowName, int windowWidth, int w
 
 	renderer = std::make_unique<Renderer>(device, deviceContext, shaderManager.get(), 1024);
 
+	scene = std::make_unique<Scene>(device, deviceContext, renderer.get());
+
 	input = window->getInput();
 }
 
