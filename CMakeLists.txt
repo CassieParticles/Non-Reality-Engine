@@ -12,6 +12,9 @@ list(APPEND ENGINE "engine/Rendering/Renderer.cpp")
 list(APPEND ENGINE "engine/Rendering/Components/MeshComponent.cpp")
 list(APPEND ENGINE "engine/Rendering/Components/CameraComponent.cpp")
 
+list(APPEND ENGINE "engine/SceneManagement/Timer.cpp")
+list(APPEND ENGINE "engine/SceneManagement/Scene.cpp")
+
 list(APPEND ENGINE "engine/BaseGameLoop.cpp")
 
 cmake_minimum_required (VERSION 3.8)

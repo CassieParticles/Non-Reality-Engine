@@ -7,7 +7,12 @@ Scene::Scene(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> deviceCont
 GameObject* Scene::createGameObject(int layer)
 {
 	GameObject* gameObject = new GameObject(device, deviceContext, renderer);
-	layers[layer].push_back(gameObject);
+	layers[layer].emplace_back(gameObject);
 
 	return gameObject;
+}
+
+void Scene::takeInput()
+{
+
 }

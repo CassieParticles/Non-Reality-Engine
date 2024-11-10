@@ -14,6 +14,10 @@ public:
 	~Scene();
 
 	GameObject* createGameObject(int layer);
+
+	void takeInput();
+	void update();
+	void renderLayer(int layer);
 protected:
 	std::vector<std::unique_ptr<GameObject>> layers[8];
 

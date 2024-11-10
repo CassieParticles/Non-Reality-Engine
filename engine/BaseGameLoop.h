@@ -14,7 +14,7 @@ class PixelShader;
 
 #include <graphicsEngine/Input.h>
 #include <graphicsEngine/View.h>
-
+#include <engine/SceneManagement/Timer.h>
 #include <engine/SceneManagement/Scene.h>
 
 class BaseGameLoop
@@ -43,12 +43,8 @@ protected:
 	//TEMP - Improved input system will be created
 	Input* input;
 
-	//TEMP - Will be put in renderer
-	InputLayout inputLayout;
+	std::unique_ptr<Timer> timer;
 
-	//TEMP - This will be private when shaders aren't directly needed
 protected:
-	VertexShader* baseVertexShader;
-	PixelShader* basePixelShader;
 
 };
