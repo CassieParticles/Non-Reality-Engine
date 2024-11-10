@@ -14,6 +14,7 @@ list(APPEND ENGINE "engine/Rendering/Components/CameraComponent.cpp")
 
 list(APPEND ENGINE "engine/SceneManagement/Timer.cpp")
 list(APPEND ENGINE "engine/SceneManagement/Scene.cpp")
+list(APPEND ENGINE "engine/SceneManagement/GameObjectAllocator.cpp")
 
 list(APPEND ENGINE "engine/BaseGameLoop.cpp")
 
