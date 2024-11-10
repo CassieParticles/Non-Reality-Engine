@@ -5,6 +5,8 @@
 #include <engine/ObjectStructure/GameObject.h>
 #include <engine/Rendering/Renderer.h>
 
+class Timer;
+
 class Scene
 {
 	template<typename T>
@@ -16,7 +18,7 @@ public:
 	GameObject* createGameObject(int layer);
 
 	void takeInput();
-	void update();
+	void update(Timer* timer);
 	void renderLayer(int layer);
 protected:
 	std::vector<std::unique_ptr<GameObject>> layers[8];

@@ -1,6 +1,8 @@
 #pragma once
 #include "Component.h"
 
+class Timer;
+
 class UpdateComponent : public Component
 {
 public:
@@ -9,5 +11,5 @@ public:
 	UpdateComponent(UpdateComponent&& other) :Component{ other } {}
 
 	//TODO: Add time manager
-	virtual void Update() = 0;
+	virtual void Update(Timer* timer) = 0;
 };

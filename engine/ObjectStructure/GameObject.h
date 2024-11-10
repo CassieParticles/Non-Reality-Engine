@@ -14,6 +14,7 @@
 #include "RenderComponent.h"
 
 #include <engine/Rendering/Renderer.h>
+#include <engine/SceneManagement/Timer.h>
 
 
 class GameObject
@@ -28,6 +29,10 @@ public:
 
 	ID3D11Device* getDevice() { return device.Get(); }
 	ID3D11DeviceContext* getDeviceContext() { return deviceContext.Get(); }
+
+	void HandleInput();
+	void Update(Timer* timer);
+	void Render();
 
 	//Definition needs to exist within header file
 	template<typename T>
