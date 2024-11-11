@@ -1,6 +1,6 @@
 #include "Scene.h"
 
-Scene::Scene(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> deviceContext, Renderer* renderer):device{device},deviceContext{deviceContext},renderer{renderer}
+Scene::Scene(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> deviceContext, Renderer* renderer) :device{ device }, deviceContext{ deviceContext }, renderer{ renderer }, layers{65535,65535,65535,65535,65535,65535,65535,65535}
 {
 }
 
@@ -10,20 +10,14 @@ Scene::~Scene()
 
 GameObject* Scene::createGameObject(int layer)
 {
-	GameObject* gameObject = new GameObject(device, deviceContext, renderer);
-	layers[layer].emplace_back(gameObject);
-
-	return gameObject;
+	return layers[layer].createGameObject(device, deviceContext, renderer);
 }
 
 void Scene::takeInput()
 {
 	for (int i = 0; i < 8; ++i)
 	{
-		for (int j = 0; j < layers[i].size(); ++i)
-		{
-			layers[i].at(j)->HandleInput();
-		}
+		layers[i].handleInput();
 	}
 }
 
@@ -31,17 +25,11 @@ void Scene::update(Timer* timer)
 {
 	for (int i = 0; i < 8; ++i)
 	{
-		for (int j = 0; j < layers[i].size(); ++i)
-		{
-			layers[i].at(j)->Update(timer);
-		}
+		layers[i].Update(timer);
 	}
 }
 
 void Scene::renderLayer(int layer)
 {
-	for (int i = 0; i < layers[layer].size(); ++i)
-	{
-		layers[layer].at(i)->Render();
-	}
+	layers[layer].Render();
 }

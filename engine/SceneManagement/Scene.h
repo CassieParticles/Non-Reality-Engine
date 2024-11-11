@@ -4,6 +4,7 @@
 
 #include <engine/ObjectStructure/GameObject.h>
 #include <engine/Rendering/Renderer.h>
+#include <engine/SceneManagement/GameObjectAllocator.h>
 
 class Timer;
 
@@ -21,7 +22,7 @@ public:
 	void update(Timer* timer);
 	void renderLayer(int layer);
 protected:
-	std::vector<std::unique_ptr<GameObject>> layers[8];
+	GameObjectAllocator layers[8];
 
 	ComPtr<ID3D11Device> device;
 	ComPtr<ID3D11DeviceContext> deviceContext;
