@@ -25,6 +25,8 @@ public:
 	BaseGameLoop(const std::string& windowName, int windowWidth, int windowHeight);
 	~BaseGameLoop();
 
+	void loop();
+
 	virtual void handleInput();
 	virtual void update();
 	virtual void render();

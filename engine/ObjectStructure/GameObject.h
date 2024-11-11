@@ -24,7 +24,7 @@ class GameObject
 	using ComPtr = Microsoft::WRL::ComPtr<T>;
 public:
 	GameObject(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> deviceContext, Renderer* renderer);
-	GameObject(GameObject& other);
+	GameObject(GameObject& other) = delete;	//TODO: Find ways to make copies of components
 	GameObject(GameObject&& other);
 	~GameObject();
 

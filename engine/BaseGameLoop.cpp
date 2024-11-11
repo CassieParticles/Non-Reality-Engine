@@ -1,4 +1,5 @@
 #include "BaseGameLoop.h"
+#include "BaseGameLoop.h"
 
 #include <graphicsEngine/Window.h>
 #include <engine/ResourceManager/ShaderManager.h>
@@ -31,9 +32,25 @@ BaseGameLoop::~BaseGameLoop()
 {
 }
 
+void BaseGameLoop::loop()
+{
+	//Pre-loop 
+	bool frame = timer->Update();
+	//Do frame every set frame
+	if (!frame) { return; }
+
+	//Game loop
+	handleInput();
+	update();
+	render();
+
+	//Post loop
+	renderer->draw();
+	window->presentBackBuffer();
+}
+
 void BaseGameLoop::handleInput()
 {
-	timer->Update();
 	input->Update();
 
 	scene->takeInput();
