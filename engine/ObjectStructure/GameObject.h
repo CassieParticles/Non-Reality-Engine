@@ -4,6 +4,7 @@
 #include <d3d11.h>
 #include <vector>
 #include <memory>
+#include <typeinfo>
 
 //Specific component within the transform component
 #include "DefaultComponents/TransformComponent.h"
