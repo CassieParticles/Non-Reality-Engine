@@ -35,12 +35,16 @@ void BaseGameLoop::handleInput()
 {
 	timer->Update();
 	input->Update();
+
+	scene->takeInput();
 }
 
 void BaseGameLoop::update()
 {
+	scene->update(timer.get());
 }
 
 void BaseGameLoop::render()
 {
+	scene->renderLayer(0);
 }

@@ -17,6 +17,7 @@ public:
 	~Scene();
 
 	GameObject* createGameObject(int layer);
+	void destroyGameObject(GameObject* object, int layer);
 
 	void takeInput();
 	void update(Timer* timer);
