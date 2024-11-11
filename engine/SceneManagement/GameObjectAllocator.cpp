@@ -9,6 +9,7 @@ GameObjectAllocator::GameObjectAllocator(wchar_t initialSize)
 	{
 		freeIndexStack.push(i);
 	}
+	gameObjectCount = 0;
 }
 
 GameObjectAllocator::~GameObjectAllocator()
@@ -30,6 +31,8 @@ GameObject* GameObjectAllocator::createGameObject(ComPtr<ID3D11Device> device, C
 
 	GameObject* go = new(gameObjectArray.data() + offset) GameObject(device, deviceContext, renderer);
 
+	++gameObjectCount;
+
 	return go;
 }
 void GameObjectAllocator::DestroyGameObject(GameObject* gameObject)
@@ -41,43 +44,53 @@ void GameObjectAllocator::DestroyGameObject(GameObject* gameObject)
 	//Set the first byte to 0, to signal this game object is destroyed
 	*(char*)gameObject = 0;
 	freeIndexStack.push(index);
+	--gameObjectCount;
 }
 
 void GameObjectAllocator::handleInput()
 {
+	int gameObjectsProcessed = 0;
 	for (int i = 0; i < gameObjectArray.size(); i+=sizeof(GameObject))
 	{
+		if (gameObjectsProcessed == gameObjectCount) { break; }
 		//Skip empty objects
 		if (gameObjectArray.at(i) == 0) { continue; }
 
 		GameObject* GO = (GameObject*)(gameObjectArray.data() + i);
 		
 		GO->HandleInput();
+		++gameObjectsProcessed;
 	}
 }
 
 void GameObjectAllocator::Update(Timer* timer)
 {
-	for (int i = 0; gameObjectArray.size(); i += sizeof(GameObject))
+	int gameObjectsProcessed = 0;
+	for (int i = 0; i < gameObjectArray.size(); i += sizeof(GameObject))
 	{
+		if (gameObjectsProcessed == gameObjectCount) { break; }
 		//Skip empty objects
 		if (gameObjectArray.at(i) == 0) { continue; }
 
 		GameObject* GO = (GameObject*)(gameObjectArray.data() + i);
 
 		GO->Update(timer);
+		++gameObjectsProcessed;
 	}
 }
 
 void GameObjectAllocator::Render()
 {
-	for (int i = 0; gameObjectArray.size(); i += sizeof(GameObject))
+	int gameObjectsProcessed = 0;
+	for (int i = 0; i < gameObjectArray.size(); i += sizeof(GameObject))
 	{
+		if (gameObjectsProcessed == gameObjectCount) { break; }
 		//Skip empty objects
 		if (gameObjectArray.at(i) == 0) { continue; }
 
 		GameObject* GO = (GameObject*)(gameObjectArray.data() + i);
 
 		GO->Render();
+		++gameObjectsProcessed;
 	}
 }

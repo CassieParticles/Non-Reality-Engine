@@ -29,8 +29,7 @@ public:
 	void Update(Timer* timer);
 	void Render();
 protected:
-
 	std::vector<char> gameObjectArray;
-
+	int gameObjectCount;
 	std::stack<wchar_t> freeIndexStack;
 };
