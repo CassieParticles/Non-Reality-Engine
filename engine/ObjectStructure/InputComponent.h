@@ -1,6 +1,8 @@
 #pragma once
 #include "Component.h"
 
+#include <graphicsEngine/Input.h>
+
 class InputComponent :public Component
 {
 public:
@@ -9,5 +11,5 @@ public:
 	InputComponent(InputComponent&& other) :Component{ other } {}
 	
 	//TODO: Add time manager
-	virtual void Input() = 0;
+	virtual void Input(InputHandler* input) = 0;
 };

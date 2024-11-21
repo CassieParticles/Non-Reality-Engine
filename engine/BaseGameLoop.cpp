@@ -10,6 +10,7 @@ BaseGameLoop::BaseGameLoop(const std::string& windowName, int windowWidth, int w
 {
 	//Initialize window
 	window = std::make_unique<Window>(windowName, 800, 600);
+	input = window->getInput();
 
 	//Get the device and device context
 	device = window->getDevice();
@@ -23,9 +24,7 @@ BaseGameLoop::BaseGameLoop(const std::string& windowName, int windowWidth, int w
 
 	timer = std::make_unique<Timer>();
 
-	scene = std::make_unique<Scene>(device, deviceContext, renderer.get());
-
-	input = window->getInput();
+	scene = std::make_unique<Scene>(device, deviceContext, renderer.get(),input);
 }
 
 BaseGameLoop::~BaseGameLoop()

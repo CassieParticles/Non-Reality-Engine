@@ -16,7 +16,7 @@ GameObjectAllocator::~GameObjectAllocator()
 {
 }
 
-GameObject* GameObjectAllocator::createGameObject(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> deviceContext,Renderer* renderer)
+GameObject* GameObjectAllocator::createGameObject(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> deviceContext,Renderer* renderer,InputHandler* input)
 {
 	//If array is empty, allocate new space
 	if (freeIndexStack.empty())
@@ -29,7 +29,7 @@ GameObject* GameObjectAllocator::createGameObject(ComPtr<ID3D11Device> device, C
 	freeIndexStack.pop();
 	int offset = index * sizeof(GameObject);
 
-	GameObject* go = new(gameObjectArray.data() + offset) GameObject(device, deviceContext, renderer);
+	GameObject* go = new(gameObjectArray.data() + offset) GameObject(device, deviceContext, renderer,input);
 
 	++gameObjectCount;
 

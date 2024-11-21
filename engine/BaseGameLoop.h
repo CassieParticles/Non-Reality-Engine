@@ -4,7 +4,7 @@
 #include <string>
 
 class Window;
-class Input;
+class InputHandler;
 class ShaderManager;
 class MeshLoader;
 class Renderer;
@@ -43,7 +43,7 @@ protected:
 	ComPtr<ID3D11Device> device;
 	ComPtr<ID3D11DeviceContext> deviceContext;
 	//TEMP - Improved input system will be created
-	Input* input;
+	InputHandler* input;
 
 	std::unique_ptr<Timer> timer;
 

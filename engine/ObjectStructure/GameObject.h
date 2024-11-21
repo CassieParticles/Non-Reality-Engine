@@ -23,7 +23,7 @@ class GameObject
 	template<typename T>
 	using ComPtr = Microsoft::WRL::ComPtr<T>;
 public:
-	GameObject(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> deviceContext, Renderer* renderer);
+	GameObject(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> deviceContext, Renderer* renderer,InputHandler* input);
 	GameObject(GameObject& other) = delete;	//TODO: Find ways to make copies of components
 	GameObject(GameObject&& other);
 	~GameObject();
@@ -190,6 +190,7 @@ protected:
 	ComPtr<ID3D11DeviceContext> deviceContext;
 
 	Renderer* renderer;
+	InputHandler* input;
 
 	TransformComponent transformComponent;
 

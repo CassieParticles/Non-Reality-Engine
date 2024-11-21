@@ -13,7 +13,7 @@ class Scene
 	template<typename T>
 	using ComPtr = Microsoft::WRL::ComPtr<T>;
 public:
-	Scene(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> deviceContext, Renderer* renderer);
+	Scene(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> deviceContext, Renderer* renderer, InputHandler* input);
 	~Scene();
 
 	GameObject* createGameObject(int layer);
@@ -29,4 +29,5 @@ protected:
 	ComPtr<ID3D11DeviceContext> deviceContext;
 
 	Renderer* renderer;
+	InputHandler* input;
 };
