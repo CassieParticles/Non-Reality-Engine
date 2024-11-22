@@ -9,7 +9,7 @@
 BaseGameLoop::BaseGameLoop(const std::string& windowName, int windowWidth, int windowHeight)
 {
 	//Initialize window
-	window = std::make_unique<Window>(windowName, 800, 600);
+	window = std::make_unique<Window>(windowName, windowWidth, windowHeight);
 	input = window->getInput();
 
 	//Get the device and device context
