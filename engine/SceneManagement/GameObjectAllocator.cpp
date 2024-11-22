@@ -12,11 +12,20 @@ GameObjectAllocator::GameObjectAllocator(wchar_t initialSize)
 	gameObjectCount = 0;
 }
 
-GameObjectAllocator::~GameObjectAllocator()
+GameObjectAllocator::GameObjectAllocator(GameObjectAllocator&& other)
 {
+	gameObjectCount = other.gameObjectCount;
+	gameObjectArray = std::move(other.gameObjectArray);
+	freeIndexStack = std::move(other.freeIndexStack);
+
 }
 
-GameObject* GameObjectAllocator::createGameObject(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> deviceContext,Renderer* renderer,InputHandler* input)
+GameObjectAllocator::~GameObjectAllocator()
+{
+	
+}
+
+GameObject* GameObjectAllocator::CreateGameObject(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> deviceContext,Renderer* renderer,InputHandler* input)
 {
 	//If array is empty, allocate new space
 	if (freeIndexStack.empty())
@@ -35,6 +44,7 @@ GameObject* GameObjectAllocator::createGameObject(ComPtr<ID3D11Device> device, C
 
 	return go;
 }
+
 void GameObjectAllocator::DestroyGameObject(GameObject* gameObject)
 {
 	//Get the index within the array
@@ -46,6 +56,7 @@ void GameObjectAllocator::DestroyGameObject(GameObject* gameObject)
 	freeIndexStack.push(index);
 	--gameObjectCount;
 }
+
 
 void GameObjectAllocator::handleInput()
 {
