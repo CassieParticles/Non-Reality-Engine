@@ -1,5 +1,4 @@
 #include "MeshLoader.h"
-#include "MeshLoader.h"
 
 #include <iostream>
 #include <DirectXMath.h>
