@@ -28,6 +28,9 @@ public:
 	GameObject(GameObject&& other);
 	~GameObject();
 
+	GameObject& operator=(GameObject& other) = delete;
+	GameObject& operator=(GameObject&& other);
+
 	ID3D11Device* getDevice() { return device.Get(); }
 	ID3D11DeviceContext* getDeviceContext() { return deviceContext.Get(); }
 

@@ -2,7 +2,7 @@
 
 #include <engine/ObjectStructure/GameObject.h>
 
-GameObjectAllocator::GameObjectAllocator(wchar_t initialSize)
+GameObjectAllocator::GameObjectAllocator(wchar_t initialSize):size{initialSize}
 {
 	gameObjectArray.resize(initialSize * sizeof(GameObject));
 	for (int i = initialSize - 1; i >= 0; --i)
@@ -48,7 +48,7 @@ GameObject* GameObjectAllocator::CreateGameObject(ComPtr<ID3D11Device> device, C
 void GameObjectAllocator::DestroyGameObject(GameObject* gameObject)
 {
 	//Get the index within the array
-	int index = gameObject - (GameObject*)gameObjectArray.data();
+	int index = getIndex(gameObject);
 	//Call the destructor of GameObject
 	gameObject->~GameObject();
 	//Set the first byte to 0, to signal this game object is destroyed
@@ -104,4 +104,9 @@ void GameObjectAllocator::Render()
 		GO->Render();
 		++gameObjectsProcessed;
 	}
+}
+
+int GameObjectAllocator::getIndex(GameObject* gameObject)
+{
+	return gameObject - (GameObject*)gameObjectArray.data();
 }

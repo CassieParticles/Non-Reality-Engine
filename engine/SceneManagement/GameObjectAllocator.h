@@ -1,11 +1,12 @@
 #pragma once
 
-#include <wrl.h>
 #include <vector>
 #include <stack>
+#include <wrl.h>
 #include <d3d11.h>
 
-class Scene;
+#include <engine/SceneManagement/Scene.h>
+
 class Timer;
 class GameObject;
 class Renderer;
@@ -26,11 +27,15 @@ public:
 
 	//Delete game object, set it's data to null, then add it's index to the stack
 	void DestroyGameObject(GameObject* gameObject);
+
+	friend GameObject* Scene::moveGameObject(GameObjectAllocator* from, GameObjectAllocator* to, GameObject* gameObject);
 	
 	void handleInput();
 	void Update(Timer* timer);
 	void Render();
 protected:
+	int getIndex(GameObject* gameObject);
+
 	int gameObjectCount;
 	int size;
 	std::vector<char> gameObjectArray;

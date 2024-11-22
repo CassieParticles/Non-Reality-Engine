@@ -1,4 +1,6 @@
 #include "Scene.h"
+#include "Scene.h"
+#include "Scene.h"
 
 #include "GameObjectAllocator.h"
 
@@ -44,4 +46,42 @@ void Scene::update(Timer* timer)
 void Scene::renderLayer(int layer)
 {
 	layers[layer].Render();
+}
+
+GameObject* Scene::moveGameObject(GameObjectAllocator* from, GameObjectAllocator* to, GameObject* gameObject)
+{
+	//Get the index of the game object, and the index of where it will go
+	int oldIndex = from->getIndex(gameObject);
+	int newIndex = to->freeIndexStack.top();
+
+	//Get the address of where the object will be copied to
+	GameObject* newPtr = (GameObject*) (to->gameObjectArray.data() + newIndex * sizeof(GameObject));
+	
+	//Copy the data over (fucked up and evil)
+	memcpy(newPtr, gameObject, sizeof(GameObject));
+
+	//Destroy old game object (don't ues builtin method, we don't want to call the destructor)
+	*(char*)gameObject = 0;
+	from->freeIndexStack.push(oldIndex);
+	--from->gameObjectCount;
+
+	//Increment gameObjectCount of old array
+	++to->gameObjectCount;
+
+
+	return newPtr;
+}
+
+GameObject* Scene::moveGameObject(int from, int to, GameObject* gameObject)
+{
+	if (from > layers.size() || from < 0 || to > layers.size() || to < 0)
+	{
+		std::cerr << "Layer provided is invalid\n";
+		return gameObject;
+	}
+
+	GameObjectAllocator* fromPtr = &layers[from];
+	GameObjectAllocator* toPtr = &layers[to];
+
+	moveGameObject(fromPtr, toPtr, gameObject);
 }

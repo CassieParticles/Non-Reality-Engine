@@ -1,4 +1,5 @@
 #include "GameObject.h"
+#include "GameObject.h"
 #include <engine/Rendering/Components/MeshComponent.h>
 
 GameObject::GameObject(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> deviceContext, Renderer* renderer, InputHandler* input) :device{ device }, deviceContext{ deviceContext }, renderer{ renderer }, input{ input }, transformComponent { this }
@@ -20,6 +21,16 @@ GameObject::GameObject(GameObject&& other):transformComponent{std::move(other.tr
 GameObject::~GameObject()
 {
 
+}
+
+GameObject& GameObject::operator=(GameObject&& other)
+{
+	if (this == &other) {
+		return *this;
+	}
+	
+
+	return other;
 }
 
 void GameObject::HandleInput()
