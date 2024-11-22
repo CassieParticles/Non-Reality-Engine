@@ -31,6 +31,7 @@ public:
 	virtual void handleInput();
 	virtual void update();
 	virtual void render();
+	virtual void exit();
 
 	bool getShouldClose() { return window->getWindowShouldClose(); }
 protected:

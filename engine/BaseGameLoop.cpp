@@ -1,5 +1,4 @@
 #include "BaseGameLoop.h"
-#include "BaseGameLoop.h"
 
 #include <graphicsEngine/Window.h>
 #include <engine/ResourceManager/ShaderManager.h>
@@ -65,4 +64,8 @@ void BaseGameLoop::update()
 void BaseGameLoop::render()
 {
 	scene->renderLayer(0);
+}
+
+void BaseGameLoop::exit()
+{
 }

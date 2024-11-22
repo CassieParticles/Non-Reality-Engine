@@ -14,6 +14,10 @@ public:
 
 	double getDeltaTime() { return deltaTime; }
 	double getSumTime() { return sumTime; }
+
+	double getFPS() { 
+		return frameCount / sumTime; 
+	}
 protected:
 	static bool instantiated;
 
@@ -24,4 +28,6 @@ protected:
 
 	std::chrono::steady_clock::time_point previousTime;
 	std::chrono::steady_clock::time_point currentTime;
+
+	long frameCount;
 };
