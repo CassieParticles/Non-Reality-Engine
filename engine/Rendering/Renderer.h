@@ -7,6 +7,7 @@
 #include <graphicsEngine/Pipeline/Mesh.h>
 #include <graphicsEngine/Pipeline/InputLayout.h>
 #include <graphicsEngine/Pipeline/Shader.h>
+#include <graphicsEngine/Pipeline/Texture2D.h>
 
 //Draw call is packed tightly to save space
 #pragma pack(push, 1)
@@ -14,7 +15,7 @@ struct DrawMesh
 {
 	byte flag;
 	Mesh* mesh;
-	//TODO: Add texture
+	Texture2D* texture;
 	DirectX::XMFLOAT4X4 worldMatrix;
 };
 
@@ -75,7 +76,7 @@ protected:
 	void setMainCamera();
 	//Functions to carry out draw calls
 	void InitRender();	//Called before all draw calls
-	void RenderMesh(Mesh* mesh, DirectX::XMFLOAT4X4 worldMatrix);
+	void RenderMesh(Mesh* mesh, Texture2D* texture, DirectX::XMFLOAT4X4 worldMatrix);
 
 	//private call, since adding drawCall is same, this is better then repeating, but I want to prevent implicit instantiation for non-draw calls
 	template<typename T>

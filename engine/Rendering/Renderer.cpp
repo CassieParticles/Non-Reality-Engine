@@ -84,7 +84,7 @@ void Renderer::draw()
 		if (*current == 0)
 		{
 			DrawMesh* meshCall = (DrawMesh*)current;
-			RenderMesh(meshCall->mesh, meshCall->worldMatrix);
+			RenderMesh(meshCall->mesh,meshCall->texture, meshCall->worldMatrix);
 			current += sizeof(DrawMesh);
 		}
 		if (*current == 1)
@@ -138,7 +138,7 @@ void Renderer::InitRender()
 	inputLayout.useInputLayout(deviceContext.Get());
 }
 
-void Renderer::RenderMesh(Mesh* mesh, DirectX::XMFLOAT4X4 worldMatrix)
+void Renderer::RenderMesh(Mesh* mesh,Texture2D* texture, DirectX::XMFLOAT4X4 worldMatrix)
 {
 	//Set mesh's world matrix
 	D3D11_MAPPED_SUBRESOURCE mappedData;
@@ -149,6 +149,8 @@ void Renderer::RenderMesh(Mesh* mesh, DirectX::XMFLOAT4X4 worldMatrix)
 
 	mesh->useMesh(deviceContext.Get());
 	deviceContext->VSSetConstantBuffers(1, 1, worldMatrixBuffer.GetAddressOf());
+	ID3D11ShaderResourceView* srvs[1]{ texture->getSRV() };
+	deviceContext->PSSetShaderResources(0, 1, srvs);
 
 	deviceContext->DrawIndexed(mesh->getVertexCount(), 0, 0);
 }

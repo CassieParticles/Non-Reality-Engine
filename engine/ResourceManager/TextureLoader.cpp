@@ -38,7 +38,7 @@ Texture2D* TextureLoader::addColour(const std::string& name, float red, float gr
 	D3D11_TEXTURE2D_DESC desc{};
 	desc.Width = 1;
 	desc.Height = 1;
-	desc.MipLevels = 0;
+	desc.MipLevels = 1;
 	desc.ArraySize = 1;
 	desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 	desc.SampleDesc = { 1,0 };
@@ -47,7 +47,7 @@ Texture2D* TextureLoader::addColour(const std::string& name, float red, float gr
 	desc.CPUAccessFlags = 0;
 	desc.MiscFlags = 0;
 
-	//textures[key] = std::make_unique<Texture2D>(device.Get(), desc, cData, sizeof(float) * 4);
+	textures[key] = std::make_unique<Texture2D>(device.Get(), desc, cData, sizeof(float) * 4);
 }
 
 Texture2D* TextureLoader::loadTextureFromFile(const std::string& name, const std::string& filePath)
@@ -77,23 +77,23 @@ Texture2D* TextureLoader::loadTextureFromFile(const std::string& name, const std
 	D3D11_TEXTURE2D_DESC desc{};
 	desc.Width = width;
 	desc.Height = height;
-	desc.MipLevels = 0;
+	desc.MipLevels = 1;
 	desc.ArraySize = 1;
 	desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	desc.SampleDesc = { 1,0 };
 	desc.Usage = D3D11_USAGE_IMMUTABLE;
 	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 	desc.CPUAccessFlags = 0;
-	desc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
+	desc.MiscFlags = 0;
 
 	textures[key] = std::make_unique<Texture2D>(device.Get(), desc, data, sizeof(char) * 4);
 
 	stbi_image_free(data);
 }
 
-Texture2D* TextureLoader::getColour(const std::string& name)
+Texture2D* TextureLoader::getTexture(const std::string& name)
 {
-	int key = std::hash < std::string>{}(name);
+	int key = std::hash <std::string>{}(name);
 
 	auto val = textures.find(key);
 	if (val == textures.end())

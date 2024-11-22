@@ -26,7 +26,7 @@ public:
 	//Load a texture from provided file path
 	Texture2D* loadTextureFromFile(const std::string& name, const std::string& filePath);
 
-	Texture2D* getColour(const std::string& name);
+	Texture2D* getTexture(const std::string& name);
 protected:
 	ComPtr<ID3D11Device> device;
 	std::unordered_map<int, std::unique_ptr<Texture2D>> textures;
