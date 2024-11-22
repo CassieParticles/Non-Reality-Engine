@@ -4,6 +4,7 @@
 #include <graphicsEngine/Window.h>
 #include <engine/ResourceManager/ShaderManager.h>
 #include <engine/ResourceManager/MeshLoader.h>
+#include <engine/ResourceManager/TextureLoader.h>
 #include <engine/Rendering/Renderer.h>
 
 BaseGameLoop::BaseGameLoop(const std::string& windowName, int windowWidth, int windowHeight)
@@ -19,6 +20,7 @@ BaseGameLoop::BaseGameLoop(const std::string& windowName, int windowWidth, int w
 	//Initialize other systems
 	shaderManager = std::make_unique<ShaderManager>(device);
 	meshLoader = std::make_unique<MeshLoader>(device);
+	textureLoader = std::make_unique<TextureLoader>(device);
 
 	renderer = std::make_unique<Renderer>(device, deviceContext, shaderManager.get(), 1024);
 

@@ -3,11 +3,12 @@
 #include <memory>
 #include <string>
 
-class Window;
-class InputHandler;
-class ShaderManager;
-class MeshLoader;
-class Renderer;
+#include <graphicsEngine/Window.h>
+
+#include <engine/ResourceManager/ShaderManager.h>
+#include <engine/ResourceManager/MeshLoader.h>
+#include <engine/ResourceManager/TextureLoader.h>
+#include <engine/Rendering/Renderer.h>
 
 class VertexShader;
 class PixelShader;
@@ -39,6 +40,7 @@ protected:
 	std::unique_ptr<MeshLoader> meshLoader;
 	std::unique_ptr<Renderer> renderer;
 	std::unique_ptr<Scene> scene;
+	std::unique_ptr<TextureLoader> textureLoader;
 
 	ComPtr<ID3D11Device> device;
 	ComPtr<ID3D11DeviceContext> deviceContext;
