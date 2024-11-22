@@ -27,6 +27,9 @@ public:
 	DirectX::XMFLOAT3 rotation;
 	DirectX::XMFLOAT3 scale;
 
-	//Position in layers
+	int getLayer() { return layer; }
+
+protected:
+	//What layer object is on (protected to prevent interference)
 	int layer;
 };
