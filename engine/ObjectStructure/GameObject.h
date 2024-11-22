@@ -189,6 +189,8 @@ public:
 
 
 protected:
+	char pad = 255;	//Ensure 1st byte isn't 0
+
 	ComPtr<ID3D11Device> device;
 	ComPtr<ID3D11DeviceContext> deviceContext;
 

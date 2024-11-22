@@ -68,6 +68,7 @@ GameObject* Scene::moveGameObject(GameObjectAllocator* from, GameObjectAllocator
 	//Increment gameObjectCount of old array
 	++to->gameObjectCount;
 
+	
 
 	return newPtr;
 }
@@ -83,5 +84,9 @@ GameObject* Scene::moveGameObject(int from, int to, GameObject* gameObject)
 	GameObjectAllocator* fromPtr = &layers[from];
 	GameObjectAllocator* toPtr = &layers[to];
 
-	moveGameObject(fromPtr, toPtr, gameObject);
+	GameObject* go = moveGameObject(fromPtr, toPtr, gameObject);
+
+	go->getComponent<TransformComponent>()->layer = to;
+
+	return go;
 }
