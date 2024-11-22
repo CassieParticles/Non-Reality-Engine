@@ -38,6 +38,8 @@ public:
 	void Update(Timer* timer);
 	void Render();
 
+	void moveGOLocation();
+
 	//Definition needs to exist within header file
 	template<typename T>
 	T* addDataComponent()

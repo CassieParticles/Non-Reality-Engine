@@ -33,6 +33,8 @@ public:
 	virtual void render();
 	virtual void exit();
 
+	void setPlayer(GameObject** gameObject) { playerObject = gameObject; }
+
 	bool getShouldClose() { return window->getWindowShouldClose(); }
 protected:
 	//Systems
@@ -50,6 +52,9 @@ protected:
 
 	std::unique_ptr<Timer> timer;
 
+
 protected:
+	//This is needed to track which object the player is on 
+	GameObject** playerObject;
 
 };

@@ -63,7 +63,7 @@ void BaseGameLoop::update()
 
 void BaseGameLoop::render()
 {
-	scene->renderLayer(0);
+	scene->renderLayer((*playerObject)->getComponent<TransformComponent>()->layer);
 }
 
 void BaseGameLoop::exit()

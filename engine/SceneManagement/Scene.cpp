@@ -53,12 +53,15 @@ GameObject* Scene::moveGameObject(GameObjectAllocator* from, GameObjectAllocator
 	//Get the index of the game object, and the index of where it will go
 	int oldIndex = from->getIndex(gameObject);
 	int newIndex = to->freeIndexStack.top();
+	to->freeIndexStack.pop();
 
 	//Get the address of where the object will be copied to
 	GameObject* newPtr = (GameObject*) (to->gameObjectArray.data() + newIndex * sizeof(GameObject));
 	
 	//Copy the data over (fucked up and evil)
 	memcpy(newPtr, gameObject, sizeof(GameObject));
+
+	newPtr->moveGOLocation();
 
 	//Destroy old game object (don't ues builtin method, we don't want to call the destructor)
 	*(char*)gameObject = 0;

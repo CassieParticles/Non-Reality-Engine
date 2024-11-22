@@ -1,5 +1,6 @@
 #include "GameObject.h"
 #include "GameObject.h"
+#include "GameObject.h"
 #include <engine/Rendering/Components/MeshComponent.h>
 
 GameObject::GameObject(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> deviceContext, Renderer* renderer, InputHandler* input) :device{ device }, deviceContext{ deviceContext }, renderer{ renderer }, input{ input }, transformComponent { this }
@@ -54,6 +55,27 @@ void GameObject::Render()
 	for (int i = 0; i < renderComponents.size(); ++i)
 	{
 		renderComponents.at(i)->Render();
+	}
+}
+
+void GameObject::moveGOLocation()
+{
+	transformComponent.setGameObject(this);
+	for (int i = 0; i < dataComponents.size(); ++i)
+	{
+		dataComponents.at(i)->setGameObject(this);
+	}
+	for (int i = 0; i < inputComponents.size(); ++i)
+	{
+		inputComponents.at(i)->setGameObject(this);
+	}
+	for (int i = 0; i < updateComponents.size(); ++i)
+	{
+		updateComponents.at(i)->setGameObject(this);
+	}
+	for (int i = 0; i < renderComponents.size(); ++i)
+	{
+		renderComponents.at(i)->setGameObject(this);
 	}
 }
 
