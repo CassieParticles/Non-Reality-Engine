@@ -3,13 +3,13 @@
 #include <graphicsEngine/View.h>
 #include <engine/ObjectStructure/RenderComponent.h>
 
-class CameraComponent : public RenderComponent
+class PlayerCameraComponent : public RenderComponent
 {
 public:
-	CameraComponent(GameObject* gameObject, Renderer* renderer);
-	CameraComponent(CameraComponent& other);
-	CameraComponent(CameraComponent&& other);
-	~CameraComponent();
+	PlayerCameraComponent(GameObject* gameObject, Renderer* renderer);
+	PlayerCameraComponent(PlayerCameraComponent& other);
+	PlayerCameraComponent(PlayerCameraComponent&& other);
+	~PlayerCameraComponent();
 
 	void setProjectionMatrixPespective(float FOV, float aspectRatio, float nearZ, float farZ) { view.setProjectionMatrixPespective(FOV, aspectRatio, nearZ, farZ); }
 	void setProjectionMatrixOrthographic(float viewWidth, float viewHeight, float nearZ, float farZ) { view.setProjectionMatrixOrthographic(viewWidth, viewHeight, nearZ, farZ); }

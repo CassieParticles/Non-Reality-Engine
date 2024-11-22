@@ -2,7 +2,7 @@
 
 #include <new>
 
-#include <engine/Rendering/Components/CameraComponent.h>
+#include <engine/Rendering/Components/PlayerCameraComponent.h>
 #include <engine/ObjectStructure/DefaultComponents/TransformComponent.h>
 #include <engine/ObjectStructure/GameObject.h>
 
@@ -74,6 +74,10 @@ void Renderer::addMainCamera(GameObject* component)
 
 void Renderer::draw()
 {
+	if (!mainCamera)
+	{
+		return;
+	}
 	//Set parameters for initial rendering
 	InitRender();
 
@@ -111,7 +115,7 @@ void Renderer::resize()
 
 void Renderer::setMainCamera()
 {
-	CameraComponent* camera = mainCamera->getComponent<CameraComponent>();
+	PlayerCameraComponent* camera = mainCamera->getComponent<PlayerCameraComponent>();
 	TransformComponent* transform = mainCamera->getComponent<TransformComponent>();
 
 	DirectX::XMMATRIX cameraMatrix = camera->getProjectionMatrix();
