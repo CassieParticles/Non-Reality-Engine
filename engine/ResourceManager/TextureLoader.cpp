@@ -47,7 +47,7 @@ Texture2D* TextureLoader::addColour(const std::string& name, float red, float gr
 	desc.CPUAccessFlags = 0;
 	desc.MiscFlags = 0;
 
-	textures[key] = std::make_unique<Texture2D>(device.Get(), desc, cData, sizeof(float) * 4);
+	//textures[key] = std::make_unique<Texture2D>(device.Get(), desc, cData, sizeof(float) * 4);
 }
 
 Texture2D* TextureLoader::loadTextureFromFile(const std::string& name, const std::string& filePath)
@@ -84,7 +84,7 @@ Texture2D* TextureLoader::loadTextureFromFile(const std::string& name, const std
 	desc.Usage = D3D11_USAGE_IMMUTABLE;
 	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 	desc.CPUAccessFlags = 0;
-	desc.MiscFlags = 0;
+	desc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
 
 	textures[key] = std::make_unique<Texture2D>(device.Get(), desc, data, sizeof(char) * 4);
 
