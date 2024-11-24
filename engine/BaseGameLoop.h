@@ -31,6 +31,7 @@ public:
 	virtual void handleInput();
 	virtual void update();
 	virtual void render();
+	virtual void guiRender();
 	virtual void exit();
 
 	void setPlayer(GameObject** gameObject) { playerObject = gameObject; }
