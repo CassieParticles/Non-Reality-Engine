@@ -71,6 +71,10 @@ protected:
 	VertexShader* vertexShader;
 	PixelShader* pixelShader;
 
+	ComPtr<ID3D11DepthStencilState> defaultDepthStencil;
+	ComPtr<ID3D11DepthStencilState> portalSurfaceDepthStencil;
+	ComPtr<ID3D11DepthStencilState> portalInsideDepthStencil;
+
 	void resize();
 
 	void setMainCamera();
