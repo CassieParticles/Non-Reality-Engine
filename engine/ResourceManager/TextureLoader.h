@@ -25,6 +25,8 @@ public:
 
 	//Load a texture from provided file path
 	Texture2D* loadTextureFromFile(const std::string& name, const std::string& filePath);
+	//Load a texture from provided data
+	Texture2D* loadTextureFromData(const std::string& name, D3D11_TEXTURE2D_DESC desc, void* initialData, int typeWidth);
 
 	Texture2D* getTexture(const std::string& name);
 protected:

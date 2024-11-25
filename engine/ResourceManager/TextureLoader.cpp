@@ -1,4 +1,5 @@
 #include "TextureLoader.h"
+#include "TextureLoader.h"
 
 #include <iostream>
 
@@ -48,6 +49,8 @@ Texture2D* TextureLoader::addColour(const std::string& name, float red, float gr
 	desc.MiscFlags = 0;
 
 	textures[key] = std::make_unique<Texture2D>(device.Get(), desc, cData, sizeof(float) * 4);
+
+	return textures[key].get();
 }
 
 Texture2D* TextureLoader::loadTextureFromFile(const std::string& name, const std::string& filePath)
@@ -89,6 +92,27 @@ Texture2D* TextureLoader::loadTextureFromFile(const std::string& name, const std
 	textures[key] = std::make_unique<Texture2D>(device.Get(), desc, data, sizeof(char) * 4);
 
 	stbi_image_free(data);
+
+	return textures[key].get();
+}
+
+Texture2D* TextureLoader::loadTextureFromData(const std::string& name, D3D11_TEXTURE2D_DESC desc, void* initialData, int typeWidth)
+{
+	//Get hash of name, for key
+	int key = std::hash<std::string>{}(name);
+
+	//Check if texture already exists
+	auto val = textures.find(key);
+
+	if (val != textures.end())
+	{
+		std::cerr << "Error: Texture already exists\n";
+		return nullptr;
+	}
+
+	textures[key] = std::make_unique<Texture2D>(device.Get(), desc, initialData, typeWidth);
+
+	return textures[key].get();
 }
 
 Texture2D* TextureLoader::getTexture(const std::string& name)
