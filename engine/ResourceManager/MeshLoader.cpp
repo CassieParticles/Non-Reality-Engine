@@ -1,4 +1,5 @@
 #include "MeshLoader.h"
+#include "MeshLoader.h"
 
 #include <iostream>
 #include <DirectXMath.h>
@@ -7,6 +8,7 @@ MeshLoader::MeshLoader(Microsoft::WRL::ComPtr<ID3D11Device> device):device{devic
 {
 	addPlaneMesh();
 	addCubeMesh();
+	addQuadMesh();
 }
 
 MeshLoader::MeshLoader(MeshLoader&& other)
@@ -153,4 +155,23 @@ void MeshLoader::addCubeMesh()
 	};
 
 	addMesh("Cube", cubeVertices, 6 * 4, indices, 6 * 6, false);
+}
+
+void MeshLoader::addQuadMesh()
+{
+	Mesh::MeshVertex quadVertices[4]
+	{
+		{{-0.5f, 0.5f,0},{0,0,-1},{0,0}},	//TL
+		{{ 0.5f, 0.5f,0},{0,0,-1},{1,0}},	//TR
+		{{ 0.5f,-0.5f,0},{0,0,-1},{1,1}},	//BR
+		{{-0.5f,-0.5f,0},{0,0,-1},{0,1}},	//BL
+	};
+
+	int indices[6] =
+	{
+		0,1,2,
+		0,2,3
+	};
+
+	addMesh("Quad", quadVertices, 4, indices, 6, false);
 }

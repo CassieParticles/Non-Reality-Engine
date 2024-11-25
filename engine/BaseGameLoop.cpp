@@ -6,10 +6,10 @@
 #include <engine/ResourceManager/TextureLoader.h>
 #include <engine/Rendering/Renderer.h>
 
-#include <imgui.h>
+
 #include <imgui_impl_dx11.h>
 #include <imgui_impl_glfw.h>
-#include <imgui_impl_win32.h>
+#include <imgui.h>
 
 BaseGameLoop::BaseGameLoop(const std::string& windowName, int windowWidth, int windowHeight)
 {
@@ -32,7 +32,7 @@ BaseGameLoop::BaseGameLoop(const std::string& windowName, int windowWidth, int w
 
 	scene = std::make_unique<Scene>(device, deviceContext, renderer.get(),input);
 
-
+	
 
 }
 
@@ -42,6 +42,7 @@ BaseGameLoop::~BaseGameLoop()
 
 void BaseGameLoop::loop()
 {
+
 	//Pre-loop 
 	bool frame = timer->Update();
 	//Do frame every set frame
@@ -71,6 +72,8 @@ void BaseGameLoop::update()
 
 void BaseGameLoop::render()
 {
+	window->clearBackBuffer();
+	window->bindRenderTarget();
 	scene->renderLayer((*playerObject)->getComponent<TransformComponent>()->layer);
 }
 

@@ -23,7 +23,7 @@ public:
 
 	void Render() override;
 protected:
-	Mesh* mesh;
-	Texture2D* texture;
+	Mesh* mesh{};
+	Texture2D* texture{};
 
 };

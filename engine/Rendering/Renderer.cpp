@@ -153,7 +153,11 @@ void Renderer::RenderMesh(Mesh* mesh,Texture2D* texture, DirectX::XMFLOAT4X4 wor
 
 	mesh->useMesh(deviceContext.Get());
 	deviceContext->VSSetConstantBuffers(1, 1, worldMatrixBuffer.GetAddressOf());
-	ID3D11ShaderResourceView* srvs[1]{ texture->getSRV() };
+	ID3D11ShaderResourceView* srvs[1]{ nullptr };
+	if (texture)
+	{
+		srvs[0] = texture->getSRV();
+	}
 	deviceContext->PSSetShaderResources(0, 1, srvs);
 
 	deviceContext->DrawIndexed(mesh->getVertexCount(), 0, 0);
