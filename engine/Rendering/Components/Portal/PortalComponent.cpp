@@ -3,6 +3,7 @@
 #include <engine/ObjectStructure/GameObject.h>
 
 #include<engine/Rendering/Components/MeshComponent.h>
+#include <engine/Rendering/Components/Portal/PortalEndComponent.h>
 
 PortalComponent::PortalComponent(GameObject* gameObject,Renderer* renderer):RenderComponent{gameObject,renderer}
 {
@@ -11,7 +12,13 @@ PortalComponent::PortalComponent(GameObject* gameObject,Renderer* renderer):Rend
 	{
 		//Destroy old mesh component
 	}
+}
 
-	//Add relevant components
-	MeshComponent* portalMesh = gameObject->addRenderComponent<MeshComponent>();
+PortalComponent::~PortalComponent()
+{
+}
+
+void PortalComponent::Render()
+{
+	renderer->addRenderCall<DrawPortalSurface>({ 0 });
 }

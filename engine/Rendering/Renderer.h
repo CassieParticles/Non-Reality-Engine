@@ -20,7 +20,7 @@ struct DrawMesh
 	DirectX::XMFLOAT4X4 worldMatrix;
 };
 
-struct PortalBegin
+struct DrawPortalSurface
 {
 	byte flag;
 };
@@ -36,6 +36,7 @@ struct ChangeShaders
 	VertexShader* vs;
 	PixelShader* ps;
 };
+
 
 #pragma pack(pop)
 
@@ -100,9 +101,12 @@ protected:
 	void resize();
 
 	void setMainCamera();
+
 	//Functions to carry out draw calls
 	void InitRender();	//Called before all draw calls
 	void RenderMesh(Mesh* mesh, Texture2D* texture, DirectX::XMFLOAT4X4 worldMatrix);
+	void DrawPortalSurfaceFunc();
+	void ResetPortalData();
 	void ChangeShadersFunc(VertexShader* vs, PixelShader* ps);
 
 	//private call, since adding drawCall is same, this is better then repeating, but I want to prevent implicit instantiation for non-draw calls
