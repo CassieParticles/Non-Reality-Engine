@@ -37,4 +37,9 @@ COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_LIST_DIR}/../Assets"
 COMMENT "Copied assets" VERBATIM
 )
 
-add_dependencies(NonRealityEngine copyAssets)
+add_custom_target(copyShaders ALL
+COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_LIST_DIR}/engine/Rendering/shaders" "${CMAKE_BINARY_DIR}/shaders"
+COMMENT "Copied assets" VERBATIM
+)
+
+add_dependencies(NonRealityEngine copyShaders)
