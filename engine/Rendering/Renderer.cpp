@@ -5,8 +5,12 @@
 #include <engine/Rendering/Components/PlayerCameraComponent.h>
 #include <engine/ObjectStructure/DefaultComponents/TransformComponent.h>
 #include <engine/ObjectStructure/GameObject.h>
+#include <engine/ResourceManager/MeshLoader.h>
 
-Renderer::Renderer(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> deviceContext, ShaderManager* shaderManager, size_t renderStackInitialSize):device{device},deviceContext{deviceContext}
+#include <graphicsEngine/Window.h>
+#include <graphicsEngine/Pipeline/Texture2D.h>
+
+Renderer::Renderer(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> deviceContext, ShaderManager* shaderManager, TextureLoader* textureLoader, MeshLoader* meshLoader, Window* window, size_t renderStackInitialSize) :device{ device }, deviceContext{ deviceContext },window { window }
 {
 	mainCamera = nullptr;
 	renderQueue.resize(renderStackInitialSize);
@@ -25,8 +29,11 @@ Renderer::Renderer(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> devi
 	device->CreateBuffer(&bufferDesc, 0, &cameraMatrixBuffer);
 	device->CreateBuffer(&bufferDesc, 0, &worldMatrixBuffer);
 
-	vertexShader = shaderManager->getVertexShader(L"shaders/vertex.hlsl");
-	pixelShader = shaderManager->getPixelShader(L"shaders/fragment.hlsl");
+	defaultVertexShader = shaderManager->getVertexShader(L"shaders/vertex.hlsl");
+	defaultPixelShader = shaderManager->getPixelShader(L"shaders/fragment.hlsl");
+
+	screenVertexShader = shaderManager->getVertexShader(L"shaders/renderScreenVertex.hlsl");
+	screenPixelShader = shaderManager->getPixelShader(L"shaders/renderScreenPixel.hlsl");
 
 	D3D11_INPUT_ELEMENT_DESC inputArr[3]
 	{
@@ -59,7 +66,7 @@ Renderer::Renderer(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> devi
 		},
 	};
 
-	inputLayout.addInputLayout(device.Get(), vertexShader->getByteCode(), inputArr, 3);
+	inputLayout.addInputLayout(device.Get(), defaultVertexShader->getByteCode(), inputArr, 3);
 
 	//Create depth stencil states
 	D3D11_DEPTH_STENCIL_DESC desc{};
@@ -108,7 +115,31 @@ Renderer::Renderer(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> devi
 	desc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
 
 	device->CreateDepthStencilState(&desc, &portalInsideDepthStencil);
+
+	D3D11_TEXTURE2D_DESC texDesc{};
+
+	texDesc.Width = 1024;
+	texDesc.Height = 1024;
+	texDesc.Usage = D3D11_USAGE_DEFAULT;
+	texDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	texDesc.MipLevels = 1;
+	texDesc.ArraySize = 1;
+	texDesc.SampleDesc = { 1,0 };
+	texDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+	texDesc.CPUAccessFlags = 0;
+	texDesc.MiscFlags = 0;
+
+	defaultRenderTarget = textureLoader->loadTextureFromData("DefaultRenderTarget", texDesc, nullptr, 16);
+	portalRenderTarget = textureLoader->loadTextureFromData("PortalRenderTarget", texDesc, nullptr, 16);
+	
+	texDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	texDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+
+	defaultDepthStencilTarget = textureLoader->loadTextureFromData("DefaultDepthStencilTarget", texDesc, nullptr, 16);
+
+	screenMesh = meshLoader->getMesh("Quad");
 }
+
 
 Renderer::~Renderer()
 {
@@ -154,6 +185,23 @@ void Renderer::draw()
 	head = 0;
 	mainCamera = nullptr;
 	drawCallCount = 0;
+
+	//Draw defaultrendertarget to window render target
+	window->bindRenderTarget();
+	//Set shaders to draw to screen
+	screenVertexShader->bindShader(deviceContext.Get());
+	screenPixelShader->bindShader(deviceContext.Get());
+
+	ID3D11ShaderResourceView* defaultSRV[1]{defaultRenderTarget->getSRV()};
+	ID3D11ShaderResourceView* emptySRV[1]{nullptr};
+
+	deviceContext->PSSetShaderResources(0, 1, defaultSRV);
+
+	screenMesh->useMesh(deviceContext.Get());
+
+	deviceContext->DrawIndexed(6, 0, 0);
+
+	deviceContext->PSGetShaderResources(0, 1, emptySRV);
 }
 
 void Renderer::resize()
@@ -183,13 +231,21 @@ void Renderer::InitRender()
 	setMainCamera();
 
 	//Set shaders
-	vertexShader->bindShader(deviceContext.Get());
-	pixelShader->bindShader(deviceContext.Get());
+	defaultVertexShader->bindShader(deviceContext.Get());
+	defaultPixelShader->bindShader(deviceContext.Get());
 
 	//Set input layout
 	inputLayout.useInputLayout(deviceContext.Get());
 
 	deviceContext->OMSetDepthStencilState(defaultDepthStencil.Get(), 1);
+
+	ID3D11RenderTargetView* rtv[1] = { defaultRenderTarget->getRTV() };
+	float c[4] = { 0.2,0.4,0.6,1.0 };
+
+	deviceContext->ClearRenderTargetView(rtv[0], c);
+	deviceContext->ClearDepthStencilView(defaultDepthStencilTarget->getDSV(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	deviceContext->OMSetRenderTargets(1, rtv, defaultDepthStencilTarget->getDSV());
+
 }
 
 void Renderer::RenderMesh(Mesh* mesh,Texture2D* texture, DirectX::XMFLOAT4X4 worldMatrix)

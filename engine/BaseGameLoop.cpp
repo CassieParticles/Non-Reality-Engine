@@ -26,7 +26,7 @@ BaseGameLoop::BaseGameLoop(const std::string& windowName, int windowWidth, int w
 	meshLoader = std::make_unique<MeshLoader>(device);
 	textureLoader = std::make_unique<TextureLoader>(device);
 
-	renderer = std::make_unique<Renderer>(device, deviceContext, shaderManager.get(), 1024);
+	renderer = std::make_unique<Renderer>(device, deviceContext, shaderManager.get(),textureLoader.get(),meshLoader.get(), window.get(), 1024);
 
 	timer = std::make_unique<Timer>();
 

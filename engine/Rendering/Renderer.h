@@ -3,6 +3,7 @@
 #include <wrl.h>
 
 #include <engine/ResourceManager/ShaderManager.h>
+#include <engine/ResourceManager/TextureLoader.h>
 
 #include <graphicsEngine/Pipeline/Mesh.h>
 #include <graphicsEngine/Pipeline/InputLayout.h>
@@ -32,13 +33,15 @@ struct PortalEnd
 #pragma pack(pop)
 
 class GameObject;
+class Window;
+class MeshLoader;
 
 class Renderer
 {
 	template<typename T>
 	using ComPtr = Microsoft::WRL::ComPtr<T>;
 public:
-	Renderer(ComPtr<ID3D11Device> device,ComPtr<ID3D11DeviceContext> deviceContext,ShaderManager* shaderManager,size_t renderStackInitialSize);
+	Renderer(ComPtr<ID3D11Device> device,ComPtr<ID3D11DeviceContext> deviceContext,ShaderManager* shaderManager,TextureLoader* textureLoader, MeshLoader* meshLoader,Window* window,size_t renderStackInitialSize);
 	Renderer(Renderer& other);
 	Renderer(Renderer&& other);
 	~Renderer();
@@ -51,13 +54,16 @@ public:
 	void addMainCamera(GameObject* component);
 
 	void draw();
+
+	ID3D11ShaderResourceView* getRenderOutput() { return defaultRenderTarget->getSRV(); }
 protected:
 	//Head is the index of the head, to get head ptr, do renderQueue.data() + head
 	std::vector<char> renderQueue;
 	int head;
 	int drawCallCount;
 
-	//Device and context for D3D11
+	//Device and context for D3D11, window for the default render targets
+	Window* window;
 	ComPtr<ID3D11Device> device;
 	ComPtr<ID3D11DeviceContext> deviceContext;
 
@@ -68,12 +74,21 @@ protected:
 	ComPtr<ID3D11Buffer> worldMatrixBuffer;
 
 	InputLayout inputLayout;
-	VertexShader* vertexShader;
-	PixelShader* pixelShader;
+	VertexShader* defaultVertexShader;
+	PixelShader* defaultPixelShader;
+
+	VertexShader* screenVertexShader;
+	PixelShader* screenPixelShader;
+	Mesh* screenMesh;
 
 	ComPtr<ID3D11DepthStencilState> defaultDepthStencil;
 	ComPtr<ID3D11DepthStencilState> portalSurfaceDepthStencil;
 	ComPtr<ID3D11DepthStencilState> portalInsideDepthStencil;
+
+	Texture2D* defaultRenderTarget;
+	Texture2D* defaultDepthStencilTarget;
+
+	Texture2D* portalRenderTarget;
 
 	void resize();
 
