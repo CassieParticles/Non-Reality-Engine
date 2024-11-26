@@ -7,9 +7,12 @@ PortalEndComponent::PortalEndComponent(GameObject* gameObject, Renderer* rendere
 {
 }
 
-void PortalEndComponent::Render()
+void PortalEndComponent::Render(bool RenderPortals)
 {
-	renderer->addRenderCall<PortalEnd>({ 0 });
+	if (RenderPortals)
+	{
+		renderer->addRenderCall<PortalEnd>({ 0 });
+	}
 }
 
 

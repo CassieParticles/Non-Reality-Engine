@@ -43,9 +43,9 @@ void Scene::update(Timer* timer)
 	}
 }
 
-void Scene::renderLayer(int layer)
+void Scene::renderLayer(int layer, bool renderPortals)
 {
-	layers[layer].Render();
+	layers[layer].Render(renderPortals);
 }
 
 GameObject* Scene::moveGameObject(GameObjectAllocator* from, GameObjectAllocator* to, GameObject* gameObject)

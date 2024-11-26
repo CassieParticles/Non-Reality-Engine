@@ -90,7 +90,7 @@ void GameObjectAllocator::Update(Timer* timer)
 	}
 }
 
-void GameObjectAllocator::Render()
+void GameObjectAllocator::Render(bool RenderPortals)
 {
 	int gameObjectsProcessed = 0;
 	for (int i = 0; i < gameObjectArray.size(); i += sizeof(GameObject))
@@ -101,7 +101,7 @@ void GameObjectAllocator::Render()
 
 		GameObject* GO = (GameObject*)(gameObjectArray.data() + i);
 
-		GO->Render();
+		GO->Render(RenderPortals);
 		++gameObjectsProcessed;
 	}
 }

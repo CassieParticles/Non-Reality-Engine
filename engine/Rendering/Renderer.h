@@ -25,6 +25,11 @@ struct DrawPortalSurface
 	byte flag;
 };
 
+struct DrawPortalInternals
+{
+	byte flag;
+};
+
 struct PortalEnd
 {
 	byte flag;

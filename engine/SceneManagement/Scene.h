@@ -27,7 +27,7 @@ public:
 
 	void takeInput();
 	void update(Timer* timer);
-	void renderLayer(int layer);
+	void renderLayer(int layer, bool renderPortals);
 
 protected:
 

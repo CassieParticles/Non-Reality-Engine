@@ -7,18 +7,17 @@
 
 PortalComponent::PortalComponent(GameObject* gameObject,Renderer* renderer):RenderComponent{gameObject,renderer}
 {
-	//Check if mesh component already exists
-	if (gameObject->getComponent<MeshComponent>())
-	{
-		//Destroy old mesh component
-	}
+	
 }
 
 PortalComponent::~PortalComponent()
 {
 }
 
-void PortalComponent::Render()
+void PortalComponent::Render(bool RenderPortals)
 {
-	renderer->addRenderCall<DrawPortalSurface>({ 0 });
+	if (RenderPortals)
+	{
+		renderer->addRenderCall<DrawPortalSurface>({ 0 });
+	}
 }

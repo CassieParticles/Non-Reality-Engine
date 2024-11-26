@@ -21,7 +21,7 @@ PlayerCameraComponent::~PlayerCameraComponent()
 {
 }
 
-void PlayerCameraComponent::Render()
+void PlayerCameraComponent::Render(bool RenderPortals)
 {
 	renderer->addMainCamera(this->gameObject);
 

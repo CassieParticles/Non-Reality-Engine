@@ -12,7 +12,7 @@ public:
 
 	void linkPortal(PortalComponent* other);
 	
-	void Render() override;
+	void Render(bool RenderPortals) override;
 protected:
 	PortalComponent* linkedPortal;
 };

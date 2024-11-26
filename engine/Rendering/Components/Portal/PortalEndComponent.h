@@ -7,7 +7,7 @@ class PortalEndComponent : public RenderComponent
 public:
 	PortalEndComponent(GameObject* gameObject, Renderer* renderer);
 
-	void Render() override;
+	void Render(bool RenderPortals) override;
 protected:
 	
 };

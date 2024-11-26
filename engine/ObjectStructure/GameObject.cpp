@@ -50,11 +50,11 @@ void GameObject::Update(Timer* timer)
 	}
 }
 
-void GameObject::Render()
+void GameObject::Render(bool RenderPortals)
 {
 	for (int i = 0; i < renderComponents.size(); ++i)
 	{
-		renderComponents.at(i)->Render();
+		renderComponents.at(i)->Render(RenderPortals);
 	}
 }
 

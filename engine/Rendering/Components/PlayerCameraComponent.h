@@ -16,7 +16,7 @@ public:
 
 	DirectX::XMMATRIX getProjectionMatrix() { return view.getProjectionMatrix(); }
 
-	void Render() override;
+	void Render(bool RenderPortals) override;
 protected:
 	View view;
 };

@@ -36,7 +36,7 @@ public:
 
 	void HandleInput();
 	void Update(Timer* timer);
-	void Render();
+	void Render(bool RenderPortals);
 
 	void moveGOLocation();
 

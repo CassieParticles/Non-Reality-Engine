@@ -74,7 +74,7 @@ void BaseGameLoop::render()
 {
 	window->clearBackBuffer();
 	window->bindRenderTarget();
-	scene->renderLayer((*playerObject)->getComponent<TransformComponent>()->layer);
+	scene->renderLayer((*playerObject)->getComponent<TransformComponent>()->layer,true);
 }
 
 void BaseGameLoop::guiRender()

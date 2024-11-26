@@ -11,7 +11,7 @@ public:
 	RenderComponent(RenderComponent&& other) :Component{ other } {}
 
 	//TODO: Add time manager
-	virtual void Render() = 0;
+	virtual void Render(bool RenderPortals) = 0;
 
 	Renderer* renderer;
 };

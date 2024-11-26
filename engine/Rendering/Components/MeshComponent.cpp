@@ -35,7 +35,7 @@ void MeshComponent::setTexture(const std::string& name, TextureLoader* textureLo
 }
 
 
-void MeshComponent::Render()
+void MeshComponent::Render(bool RenderPortals)
 {
 	//Get device context
 	ID3D11DeviceContext* deviceContext = gameObject->getDeviceContext();

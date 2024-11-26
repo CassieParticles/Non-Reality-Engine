@@ -1,6 +1,4 @@
 #include "Renderer.h"
-#include "Renderer.h"
-#include "Renderer.h"
 
 #include <new>
 
@@ -19,6 +17,9 @@ void Renderer::addRenderCall<DrawMesh>(DrawMesh drawCall);
 
 template<>
 void Renderer::addRenderCall<DrawPortalSurface>(DrawPortalSurface drawCall);
+
+template<>
+void Renderer::addRenderCall<DrawPortalInternals>(DrawPortalInternals drawCall);
 
 template<>
 void Renderer::addRenderCall<PortalEnd>(PortalEnd drawCall);
@@ -196,12 +197,18 @@ void Renderer::draw()
 		}
 		else if (*current == 2)
 		{
+			//Draw portal internals
+			current += sizeof(DrawPortalInternals);
+			index += sizeof(DrawPortalInternals);
+		}
+		else if (*current == 3)
+		{
 			ResetPortalData();
 			current += sizeof(PortalEnd);
 			index+=sizeof(PortalEnd);
 		}
 		
-		else if (*current == 3)
+		else if (*current == 4)
 		{
 			//Change shaders
 			ChangeShaders* changeShaders = (ChangeShaders*)current;
@@ -341,18 +348,23 @@ void Renderer::addRenderCall<DrawPortalSurface>(DrawPortalSurface drawCall)
 }
 
 template<>
-void Renderer::addRenderCall<PortalEnd>(PortalEnd drawCall)
+void Renderer::addRenderCall<DrawPortalInternals>(DrawPortalInternals drawCall)
 {
 	drawCall.flag = 2;
-	addRenderCallPriv<PortalEnd>(drawCall);
+	addRenderCallPriv<DrawPortalInternals>(drawCall);
+}
 
-	ID3D11RenderTargetView* rtv[1] = { defaultRenderTarget->getRTV() };
+template<>
+void Renderer::addRenderCall<PortalEnd>(PortalEnd drawCall)
+{
+	drawCall.flag = 3;
+	addRenderCallPriv<PortalEnd>(drawCall);
 }
 
 template<>
 void Renderer::addRenderCall<ChangeShaders>(ChangeShaders drawCall)
 {
-	drawCall.flag = 3;
+	drawCall.flag = 4;
 	addRenderCallPriv<ChangeShaders>(drawCall);
 }
 
