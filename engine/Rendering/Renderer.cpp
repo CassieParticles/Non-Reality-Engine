@@ -1,4 +1,6 @@
 #include "Renderer.h"
+#include "Renderer.h"
+#include "Renderer.h"
 
 #include <new>
 
@@ -16,7 +18,7 @@ template<>
 void Renderer::addRenderCall<DrawMesh>(DrawMesh drawCall);
 
 template<>
-void Renderer::addRenderCall<PortalBegin>(PortalBegin drawCall);
+void Renderer::addRenderCall<DrawPortalSurface>(DrawPortalSurface drawCall);
 
 template<>
 void Renderer::addRenderCall<PortalEnd>(PortalEnd drawCall);
@@ -188,13 +190,13 @@ void Renderer::draw()
 		}
 		else if (*current == 1)
 		{
-			//Begin portal
-			current += sizeof(PortalBegin);
-			index+=sizeof(PortalBegin);
+			DrawPortalSurfaceFunc();
+			current += sizeof(DrawPortalSurface);
+			index+=sizeof(DrawPortalSurface);
 		}
 		else if (*current == 2)
 		{
-			//End portal
+			ResetPortalData();
 			current += sizeof(PortalEnd);
 			index+=sizeof(PortalEnd);
 		}
@@ -298,6 +300,25 @@ void Renderer::RenderMesh(Mesh* mesh,Texture2D* texture, DirectX::XMFLOAT4X4 wor
 	deviceContext->DrawIndexed(mesh->getVertexCount(), 0, 0);
 }
 
+void Renderer::DrawPortalSurfaceFunc()
+{
+	//Set depth stencil state to portalSurface depth stencil state
+	deviceContext->OMSetDepthStencilState(portalSurfaceDepthStencil.Get(), 1);
+
+	float clearColour[4] = { 0,0,0,1 };
+	//Clear portal internal render target, and set render targets
+	deviceContext->ClearRenderTargetView(portalRenderTarget->getRTV(), clearColour);
+	deviceContext->OMSetRenderTargets(0, nullptr, defaultDepthStencilTarget->getDSV());
+}
+
+void Renderer::ResetPortalData()
+{
+	deviceContext->OMSetDepthStencilState(defaultDepthStencil.Get(), 1);
+
+	ID3D11RenderTargetView* rtv[1] = { defaultRenderTarget->getRTV() };
+	deviceContext->OMSetRenderTargets(1, rtv, defaultDepthStencilTarget->getDSV());
+}
+
 void Renderer::ChangeShadersFunc(VertexShader* vs, PixelShader* ps)
 {
 	vs->bindShader(deviceContext.Get());
@@ -313,10 +334,10 @@ void Renderer::addRenderCall<DrawMesh>(DrawMesh drawCall)
 }
 
 template<>
-void Renderer::addRenderCall<PortalBegin>(PortalBegin drawCall)
+void Renderer::addRenderCall<DrawPortalSurface>(DrawPortalSurface drawCall)
 {
 	drawCall.flag = 1;
-	addRenderCallPriv<PortalBegin>(drawCall);
+	addRenderCallPriv<DrawPortalSurface>(drawCall);
 }
 
 template<>
@@ -324,6 +345,8 @@ void Renderer::addRenderCall<PortalEnd>(PortalEnd drawCall)
 {
 	drawCall.flag = 2;
 	addRenderCallPriv<PortalEnd>(drawCall);
+
+	ID3D11RenderTargetView* rtv[1] = { defaultRenderTarget->getRTV() };
 }
 
 template<>
