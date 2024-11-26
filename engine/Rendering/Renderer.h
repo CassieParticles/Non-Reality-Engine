@@ -30,6 +30,13 @@ struct PortalEnd
 	byte flag;
 };
 
+struct ChangeShaders
+{
+	byte flag;
+	VertexShader* vs;
+	PixelShader* ps;
+};
+
 #pragma pack(pop)
 
 class GameObject;
@@ -47,7 +54,7 @@ public:
 	~Renderer();
 	Renderer& operator=(Renderer& other) { return other; }
 
-	//Public call, ensures T is one of 3 calls above
+	//Public call, ensures T is one of the calls above
 	template<typename T>
 	void addRenderCall(T drawCall);
 
@@ -96,6 +103,7 @@ protected:
 	//Functions to carry out draw calls
 	void InitRender();	//Called before all draw calls
 	void RenderMesh(Mesh* mesh, Texture2D* texture, DirectX::XMFLOAT4X4 worldMatrix);
+	void ChangeShadersFunc(VertexShader* vs, PixelShader* ps);
 
 	//private call, since adding drawCall is same, this is better then repeating, but I want to prevent implicit instantiation for non-draw calls
 	template<typename T>
@@ -112,3 +120,4 @@ protected:
 		drawCallCount++;
 	}
 };
+

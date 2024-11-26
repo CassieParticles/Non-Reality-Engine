@@ -162,6 +162,7 @@ void Renderer::draw()
 
 	//Iterate through each draw call
 	char* current = renderQueue.data();
+	int index = 0;
 	for (int i = 0; i < drawCallCount; ++i)
 	{
 		if (*current == 0)
@@ -169,16 +170,28 @@ void Renderer::draw()
 			DrawMesh* meshCall = (DrawMesh*)current;
 			RenderMesh(meshCall->mesh,meshCall->texture, meshCall->worldMatrix);
 			current += sizeof(DrawMesh);
+			index += sizeof(DrawMesh);
 		}
-		if (*current == 1)
+		else if (*current == 1)
 		{
 			//Begin portal
 			current += sizeof(PortalBegin);
+			index+=sizeof(PortalBegin);
 		}
-		if (*current == 2)
+		else if (*current == 2)
 		{
 			//End portal
 			current += sizeof(PortalEnd);
+			index+=sizeof(PortalEnd);
+		}
+		
+		else if (*current == 3)
+		{
+			//Change shaders
+			ChangeShaders* changeShaders = (ChangeShaders*)current;
+			ChangeShadersFunc(changeShaders->vs, changeShaders->ps);
+			current += sizeof(ChangeShaders);
+			index+=sizeof(ChangeShaders);
 		}
 	}
 	//Draw calls are all done, clear queue
@@ -246,6 +259,8 @@ void Renderer::InitRender()
 	deviceContext->ClearDepthStencilView(defaultDepthStencilTarget->getDSV(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	deviceContext->OMSetRenderTargets(1, rtv, defaultDepthStencilTarget->getDSV());
 
+	//addRenderCallPriv<ChangeShaders>({ 3,screenVertexShader,screenPixelShader });
+
 }
 
 void Renderer::RenderMesh(Mesh* mesh,Texture2D* texture, DirectX::XMFLOAT4X4 worldMatrix)
@@ -269,6 +284,13 @@ void Renderer::RenderMesh(Mesh* mesh,Texture2D* texture, DirectX::XMFLOAT4X4 wor
 	deviceContext->DrawIndexed(mesh->getVertexCount(), 0, 0);
 }
 
+void Renderer::ChangeShadersFunc(VertexShader* vs, PixelShader* ps)
+{
+	//vs->bindShader(deviceContext.Get());
+	//ps->bindShader(deviceContext.Get());
+	std::cout << "Changing shaders\n";
+}
+
 template<>
 void Renderer::addRenderCall<DrawMesh>(DrawMesh drawCall)
 {
@@ -289,3 +311,11 @@ void Renderer::addRenderCall<PortalEnd>(PortalEnd drawCall)
 	drawCall.flag = 2;
 	addRenderCallPriv<PortalEnd>(drawCall);
 }
+
+template<>
+void Renderer::addRenderCall<ChangeShaders>(ChangeShaders drawCall)
+{
+	drawCall.flag = 3;
+	addRenderCallPriv<ChangeShaders>(drawCall);
+}
+
