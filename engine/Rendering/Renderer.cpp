@@ -10,6 +10,20 @@
 #include <graphicsEngine/Window.h>
 #include <graphicsEngine/Pipeline/Texture2D.h>
 
+//Forward declare the addRenderCalls to allow renderer to use it's own interface
+
+template<>
+void Renderer::addRenderCall<DrawMesh>(DrawMesh drawCall);
+
+template<>
+void Renderer::addRenderCall<PortalBegin>(PortalBegin drawCall);
+
+template<>
+void Renderer::addRenderCall<PortalEnd>(PortalEnd drawCall);
+
+template<>
+void Renderer::addRenderCall<ChangeShaders>(ChangeShaders drawCall);
+
 Renderer::Renderer(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> deviceContext, ShaderManager* shaderManager, TextureLoader* textureLoader, MeshLoader* meshLoader, Window* window, size_t renderStackInitialSize) :device{ device }, deviceContext{ deviceContext },window { window }
 {
 	mainCamera = nullptr;
@@ -202,8 +216,8 @@ void Renderer::draw()
 	//Draw defaultrendertarget to window render target
 	window->bindRenderTarget();
 	//Set shaders to draw to screen
-	screenVertexShader->bindShader(deviceContext.Get());
-	screenPixelShader->bindShader(deviceContext.Get());
+	//screenVertexShader->bindShader(deviceContext.Get());
+	//screenPixelShader->bindShader(deviceContext.Get());
 
 	ID3D11ShaderResourceView* defaultSRV[1]{defaultRenderTarget->getSRV()};
 	ID3D11ShaderResourceView* emptySRV[1]{nullptr};
@@ -259,7 +273,8 @@ void Renderer::InitRender()
 	deviceContext->ClearDepthStencilView(defaultDepthStencilTarget->getDSV(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	deviceContext->OMSetRenderTargets(1, rtv, defaultDepthStencilTarget->getDSV());
 
-	//addRenderCallPriv<ChangeShaders>({ 3,screenVertexShader,screenPixelShader });
+	//Add final render calls to draw to window rtv
+	addRenderCall<ChangeShaders>({ 0,screenVertexShader,screenPixelShader });
 
 }
 
@@ -286,9 +301,9 @@ void Renderer::RenderMesh(Mesh* mesh,Texture2D* texture, DirectX::XMFLOAT4X4 wor
 
 void Renderer::ChangeShadersFunc(VertexShader* vs, PixelShader* ps)
 {
-	//vs->bindShader(deviceContext.Get());
-	//ps->bindShader(deviceContext.Get());
-	std::cout << "Changing shaders\n";
+	vs->bindShader(deviceContext.Get());
+	ps->bindShader(deviceContext.Get());
+	//std::cout << "Changing shaders\n";
 }
 
 template<>
