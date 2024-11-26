@@ -229,6 +229,9 @@ void Renderer::draw()
 	deviceContext->DrawIndexed(6, 0, 0);
 
 	deviceContext->PSGetShaderResources(0, 1, emptySRV);
+
+	//Add setting default shaders to front of render queue
+	addRenderCall<ChangeShaders>({ 0,defaultVertexShader,defaultPixelShader });
 }
 
 void Renderer::resize()
@@ -256,10 +259,6 @@ void Renderer::setMainCamera()
 void Renderer::InitRender()
 {
 	setMainCamera();
-
-	//Set shaders
-	defaultVertexShader->bindShader(deviceContext.Get());
-	defaultPixelShader->bindShader(deviceContext.Get());
 
 	//Set input layout
 	inputLayout.useInputLayout(deviceContext.Get());
