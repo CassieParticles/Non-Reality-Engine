@@ -100,6 +100,7 @@ protected:
 
 	Texture2D* defaultRenderTarget;
 	Texture2D* defaultDepthStencilTarget;
+	D3D11_VIEWPORT viewport;
 
 	Texture2D* portalRenderTarget;
 
@@ -111,6 +112,7 @@ protected:
 	void InitRender();	//Called before all draw calls
 	void RenderMesh(Mesh* mesh, Texture2D* texture, DirectX::XMFLOAT4X4 worldMatrix);
 	void DrawPortalSurfaceFunc();
+	void DrawPortalInternalsFunc();
 	void ResetPortalData();
 	void ChangeShadersFunc(VertexShader* vs, PixelShader* ps);
 

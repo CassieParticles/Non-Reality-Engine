@@ -148,6 +148,8 @@ Renderer::Renderer(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> devi
 
 	defaultRenderTarget = textureLoader->loadTextureFromData("DefaultRenderTarget", texDesc, nullptr, 16);
 	portalRenderTarget = textureLoader->loadTextureFromData("PortalRenderTarget", texDesc, nullptr, 16);
+
+	viewport = { 0,0,1024,1024,0,1 };
 	
 	texDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	texDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
@@ -198,6 +200,7 @@ void Renderer::draw()
 		else if (*current == 2)
 		{
 			//Draw portal internals
+			DrawPortalInternalsFunc();
 			current += sizeof(DrawPortalInternals);
 			index += sizeof(DrawPortalInternals);
 		}
@@ -280,6 +283,7 @@ void Renderer::InitRender()
 	deviceContext->ClearRenderTargetView(rtv[0], c);
 	deviceContext->ClearDepthStencilView(defaultDepthStencilTarget->getDSV(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	deviceContext->OMSetRenderTargets(1, rtv, defaultDepthStencilTarget->getDSV());
+	deviceContext->RSSetViewports(1, &viewport);
 
 	//Add final render calls to draw to window rtv
 	addRenderCall<ChangeShaders>({ 0,screenVertexShader,screenPixelShader });
@@ -316,6 +320,18 @@ void Renderer::DrawPortalSurfaceFunc()
 	//Clear portal internal render target, and set render targets
 	deviceContext->ClearRenderTargetView(portalRenderTarget->getRTV(), clearColour);
 	deviceContext->OMSetRenderTargets(0, nullptr, defaultDepthStencilTarget->getDSV());
+	deviceContext->RSSetViewports(1, &viewport);
+}
+
+void Renderer::DrawPortalInternalsFunc()
+{
+	//Set depth stencil state
+	deviceContext->OMSetDepthStencilState(portalInsideDepthStencil.Get(), 1);
+	ID3D11RenderTargetView* rtvs[1]{portalRenderTarget->getRTV()};
+	deviceContext->OMSetRenderTargets(1, rtvs, defaultDepthStencilTarget->getDSV());
+	deviceContext->RSSetViewports(1, &viewport);
+
+	//Update camera to custom one
 }
 
 void Renderer::ResetPortalData()
@@ -324,6 +340,10 @@ void Renderer::ResetPortalData()
 
 	ID3D11RenderTargetView* rtv[1] = { defaultRenderTarget->getRTV() };
 	deviceContext->OMSetRenderTargets(1, rtv, defaultDepthStencilTarget->getDSV());
+	deviceContext->RSSetViewports(1, &viewport);
+
+	//Set camera to main one
+	setMainCamera();
 }
 
 void Renderer::ChangeShadersFunc(VertexShader* vs, PixelShader* ps)
