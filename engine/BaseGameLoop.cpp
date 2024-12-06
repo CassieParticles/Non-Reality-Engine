@@ -7,9 +7,10 @@
 #include <engine/Rendering/Renderer.h>
 
 
-#include <imgui_impl_dx11.h>
-#include <imgui_impl_glfw.h>
 #include <imgui.h>
+#include <imgui_impl_dx11.h>
+//#include <imgui_impl_glfw.h>
+#include <imgui_impl_glfw.cpp>	//Evil solution 
 
 BaseGameLoop::BaseGameLoop(const std::string& windowName, int windowWidth, int windowHeight)
 {
@@ -33,7 +34,15 @@ BaseGameLoop::BaseGameLoop(const std::string& windowName, int windowWidth, int w
 	scene = std::make_unique<Scene>(device, deviceContext, renderer.get(),input);
 
 	
+	//Set up dearImGui
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
 
+	ImGui_ImplGlfw_InitForOther(window->getWindow(), true);
+	ImGui_ImplDX11_Init(device.Get(), deviceContext.Get());
 }
 
 BaseGameLoop::~BaseGameLoop()
@@ -42,11 +51,18 @@ BaseGameLoop::~BaseGameLoop()
 
 void BaseGameLoop::loop()
 {
-
-	//Pre-loop 
+	//Check if loop calculation should occur
 	bool frame = timer->Update();
 	//Do frame every set frame
 	if (!frame) { return; }
+	//Pre-loop 
+	
+	//Initialize imgui frame
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplGlfw_NewFrame();
+	ImGui::NewFrame();
+	ImGui::ShowDemoWindow(); // Show demo window! :)
+
 
 	//Game loop
 	handleInput();
@@ -55,6 +71,11 @@ void BaseGameLoop::loop()
 
 	//Post loop
 	renderer->draw();
+
+	//Render imgui to screen
+	ImGui::Render();
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
 	window->presentBackBuffer();
 }
 
@@ -83,4 +104,7 @@ void BaseGameLoop::guiRender()
 
 void BaseGameLoop::exit()
 {
+	ImGui_ImplDX11_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
 }

@@ -18,6 +18,8 @@ class PixelShader;
 #include <engine/SceneManagement/Timer.h>
 #include <engine/SceneManagement/Scene.h>
 
+
+
 class BaseGameLoop
 {
 	template <typename T>
