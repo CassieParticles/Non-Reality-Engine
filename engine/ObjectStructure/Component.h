@@ -13,6 +13,8 @@ public:
 
 	//FOR INTERNAL USE ONLY, DO NOT CALL
 	void setGameObject(GameObject* gameObject) { this->gameObject = gameObject; }
+
+	GameObject* getGameObject() { return gameObject; }
 protected:
 	GameObject* gameObject;
 };
