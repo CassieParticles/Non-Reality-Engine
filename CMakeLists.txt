@@ -1,4 +1,4 @@
-# CMakeList.txt : CMake project for Non Reality Engine, include source and define
+﻿# CMakeList.txt : CMake project for Non Reality Engine, include source and define
 # project specific logic here.
 #
 
@@ -10,11 +10,13 @@ list(APPEND ENGINE "engine/ObjectStructure/GameObject.cpp")
 list(APPEND ENGINE "engine/ObjectStructure/DefaultComponents/TransformComponent.cpp")
 
 list(APPEND ENGINE "engine/Rendering/Renderer.cpp")
+list(APPEND ENGINE "engine/Rendering/ObliqueView.cpp")
 list(APPEND ENGINE "engine/Rendering/Components/MeshComponent.cpp")
 list(APPEND ENGINE "engine/Rendering/Components/PlayerCameraComponent.cpp")
 
 list(APPEND ENGINE "engine/Rendering/Components/Portal/PortalComponent.cpp")
 list(APPEND ENGINE "engine/Rendering/Components/Portal/PortalCameraComponent.cpp")
+list(APPEND ENGINE "engine/Rendering/Components/Portal/PortalInternalsComponent.cpp")
 list(APPEND ENGINE "engine/Rendering/Components/Portal/PortalEndComponent.cpp")
 
 list(APPEND ENGINE "engine/SceneManagement/Timer.cpp")

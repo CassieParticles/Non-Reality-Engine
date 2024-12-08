@@ -67,6 +67,7 @@ void BaseGameLoop::loop()
 	handleInput();
 	update();
 	render();
+	guiRender();
 
 	//Post loop
 	renderer->draw();
