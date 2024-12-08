@@ -16,15 +16,7 @@ ObliqueView::ObliqueView(ObliqueView&& other) :View{ other }
 }
 
 //Derived from : https://terathon.com/lengyel/Lengyel-Oblique.pdf
-void ObliqueView::setProjectionMatrixNearClip(float FOV, float aspectRatio, float nearZ, float farZ, DirectX::XMFLOAT4 nearClipPlane)
-{
-	//Calculate the projection matrix to be modified
-	setProjectionMatrixPespective(FOV, aspectRatio, nearZ, farZ);
-
-	setProjectionMatrixNearClip(nearClipPlane);
-}
-
-void ObliqueView::setProjectionMatrixNearClip(DirectX::XMFLOAT4 nearClipPlane)
+DirectX::XMFLOAT4X4 ObliqueView::calcProjectionMatrixNearClip(DirectX::XMFLOAT4 nearClipPlane)
 {
 	DirectX::XMVECTOR c = DirectX::XMLoadFloat4(&nearClipPlane);
 	//Get the transpose of the inverse of the projection matrix
@@ -64,9 +56,13 @@ void ObliqueView::setProjectionMatrixNearClip(DirectX::XMFLOAT4 nearClipPlane)
 	DirectX::XMFLOAT4 m3Comp;
 	DirectX::XMStoreFloat4(&m3Comp, m3);
 
+	DirectX::XMFLOAT4X4 obliqueProjectionMatrix = projectionMatrix;
+
 	//Override column 3 in the matrix with updated 
-	projectionMatrix._13 = m3Comp.x;
-	projectionMatrix._23 = m3Comp.y;
-	projectionMatrix._33 = m3Comp.z;
-	projectionMatrix._43 = m3Comp.w;
+	obliqueProjectionMatrix._13 = m3Comp.x;
+	obliqueProjectionMatrix._23 = m3Comp.y;
+	obliqueProjectionMatrix._33 = m3Comp.z;
+	obliqueProjectionMatrix._43 = m3Comp.w;
+
+	return obliqueProjectionMatrix;
 }
