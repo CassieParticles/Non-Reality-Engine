@@ -11,6 +11,7 @@ public:
 	~PortalComponent();
 
 	void linkPortal(PortalComponent* other);
+	PortalComponent* getOtherPortal() { return linkedPortal;}
 	
 	void Render(bool RenderPortals) override;
 protected:
