@@ -14,7 +14,7 @@
 #pragma pack(push, 1)
 struct DrawMesh
 {
-	byte flag;
+	byte flag;	//0
 	Mesh* mesh;
 	Texture2D* texture;
 	DirectX::XMFLOAT4X4 worldMatrix;
@@ -22,22 +22,30 @@ struct DrawMesh
 
 struct DrawPortalSurface
 {
-	byte flag;
+	byte flag;	//1
+};
+
+
+struct DrawPortalSetCamera
+{
+	byte flag;	//2
+	DirectX::XMFLOAT4X4 cameraMatrix;
 };
 
 struct DrawPortalInternals
 {
-	byte flag;
+	byte flag;	//3
 };
+
 
 struct PortalEnd
 {
-	byte flag;
+	byte flag;	//4
 };
 
 struct ChangeShaders
 {
-	byte flag;
+	byte flag;	//5
 	VertexShader* vs;
 	PixelShader* ps;
 };
@@ -112,6 +120,7 @@ protected:
 	void InitRender();	//Called before all draw calls
 	void RenderMesh(Mesh* mesh, Texture2D* texture, DirectX::XMFLOAT4X4 worldMatrix);
 	void DrawPortalSurfaceFunc();
+	void DrawPortalSetCameraFunc(DirectX::XMFLOAT4X4 cameraMatrix);
 	void DrawPortalInternalsFunc();
 	void ResetPortalData();
 	void ChangeShadersFunc(VertexShader* vs, PixelShader* ps);

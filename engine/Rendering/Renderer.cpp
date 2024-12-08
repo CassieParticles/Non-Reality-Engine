@@ -19,6 +19,9 @@ template<>
 void Renderer::addRenderCall<DrawPortalSurface>(DrawPortalSurface drawCall);
 
 template<>
+void Renderer::addRenderCall<DrawPortalSetCamera>(DrawPortalSetCamera drawCall);
+
+template<>
 void Renderer::addRenderCall<DrawPortalInternals>(DrawPortalInternals drawCall);
 
 template<>
@@ -199,19 +202,25 @@ void Renderer::draw()
 		}
 		else if (*current == 2)
 		{
+			//DrawPortalSurfaceFunc();
+			current += sizeof(DrawPortalSetCamera);
+			index+=sizeof(DrawPortalSetCamera);
+		}
+		else if (*current == 3)
+		{
 			//Draw portal internals
 			DrawPortalInternalsFunc();
 			current += sizeof(DrawPortalInternals);
 			index += sizeof(DrawPortalInternals);
 		}
-		else if (*current == 3)
+		else if (*current == 4)
 		{
 			ResetPortalData();
 			current += sizeof(PortalEnd);
 			index+=sizeof(PortalEnd);
 		}
 		
-		else if (*current == 4)
+		else if (*current == 5)
 		{
 			//Change shaders
 			ChangeShaders* changeShaders = (ChangeShaders*)current;
@@ -323,6 +332,19 @@ void Renderer::DrawPortalSurfaceFunc()
 	deviceContext->RSSetViewports(1, &viewport);
 }
 
+void Renderer::DrawPortalSetCameraFunc(DirectX::XMFLOAT4X4 cameraMatrix)
+{
+	DirectX::XMMATRIX camMatrix = DirectX::XMLoadFloat4x4(&cameraMatrix);
+
+	D3D11_MAPPED_SUBRESOURCE mappedData;
+	deviceContext->Map(cameraMatrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData);
+	DirectX::XMMATRIX* data = (DirectX::XMMATRIX*)mappedData.pData;
+	*data = camMatrix;
+	deviceContext->Unmap(cameraMatrixBuffer.Get(), 0);
+
+	deviceContext->VSSetConstantBuffers(0, 1, cameraMatrixBuffer.GetAddressOf());
+}
+
 void Renderer::DrawPortalInternalsFunc()
 {
 	//Set depth stencil state
@@ -332,6 +354,7 @@ void Renderer::DrawPortalInternalsFunc()
 	deviceContext->RSSetViewports(1, &viewport);
 
 	//Update camera to custom one
+
 }
 
 void Renderer::ResetPortalData()
@@ -368,23 +391,30 @@ void Renderer::addRenderCall<DrawPortalSurface>(DrawPortalSurface drawCall)
 }
 
 template<>
-void Renderer::addRenderCall<DrawPortalInternals>(DrawPortalInternals drawCall)
+void Renderer::addRenderCall<DrawPortalSetCamera>(DrawPortalSetCamera drawCall)
 {
 	drawCall.flag = 2;
+	addRenderCallPriv<DrawPortalSetCamera>(drawCall);
+}
+
+template<>
+void Renderer::addRenderCall<DrawPortalInternals>(DrawPortalInternals drawCall)
+{
+	drawCall.flag = 3;
 	addRenderCallPriv<DrawPortalInternals>(drawCall);
 }
 
 template<>
 void Renderer::addRenderCall<PortalEnd>(PortalEnd drawCall)
 {
-	drawCall.flag = 3;
+	drawCall.flag = 4;
 	addRenderCallPriv<PortalEnd>(drawCall);
 }
 
 template<>
 void Renderer::addRenderCall<ChangeShaders>(ChangeShaders drawCall)
 {
-	drawCall.flag = 4;
+	drawCall.flag = 5;
 	addRenderCallPriv<ChangeShaders>(drawCall);
 }
 
