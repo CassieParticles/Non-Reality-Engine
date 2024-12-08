@@ -11,6 +11,7 @@ PortalInternalsComponent::PortalInternalsComponent(GameObject* gameObject, Rende
 
 void PortalInternalsComponent::Render(bool RenderPortals)
 {
+	if (!RenderPortals) { return; }
 	//Enable drawing the internals
 	renderer->addRenderCall<DrawPortalInternals>({ 0 });
 
