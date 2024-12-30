@@ -8,8 +8,8 @@ class PortalCameraComponent : public RenderComponent
 {
 public:
 	PortalCameraComponent(GameObject* gameObject, Renderer* renderer);
-	PortalCameraComponent(PortalCameraComponent& other);
-	PortalCameraComponent(PortalCameraComponent&& other);
+	PortalCameraComponent(PortalCameraComponent& other) = delete;
+	PortalCameraComponent(PortalCameraComponent&& other) = default;
 	~PortalCameraComponent();
 
 	void setPlayer(GameObject* player);
