@@ -45,7 +45,7 @@ public:
 	T* addDataComponent()
 	{
 		//Ensure 2 transform components do not exist
-		if (std::is_base_of<TransformComponent, T>)
+		if (std::is_base_of<TransformComponent, T>())
 		{
 			return &transformComponent;
 		}
