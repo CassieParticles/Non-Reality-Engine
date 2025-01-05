@@ -105,6 +105,7 @@ protected:
 	ComPtr<ID3D11DepthStencilState> defaultDepthStencil;
 	ComPtr<ID3D11DepthStencilState> portalSurfaceDepthStencil;
 	ComPtr<ID3D11DepthStencilState> portalInsideDepthStencil;
+	ComPtr<ID3D11SamplerState> defaultSamplerState;
 
 	Texture2D* defaultRenderTarget;
 	Texture2D* defaultDepthStencilTarget;

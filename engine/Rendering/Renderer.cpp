@@ -149,6 +149,18 @@ Renderer::Renderer(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> devi
 	texDesc.CPUAccessFlags = 0;
 	texDesc.MiscFlags = 0;
 
+	D3D11_SAMPLER_DESC samplerDesc{};
+
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc.AddressU = samplerDesc.AddressV = samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.MinLOD = -FLT_MAX;
+	samplerDesc.MaxLOD = FLT_MAX;
+	samplerDesc.MipLODBias = 0;
+	samplerDesc.MaxAnisotropy = 1;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+
+	device->CreateSamplerState(&samplerDesc, &defaultSamplerState);
+
 	defaultRenderTarget = textureLoader->loadTextureFromData("DefaultRenderTarget", texDesc, nullptr, 16);
 	portalRenderTarget = textureLoader->loadTextureFromData("PortalRenderTarget", texDesc, nullptr, 16);
 
@@ -160,6 +172,8 @@ Renderer::Renderer(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> devi
 	defaultDepthStencilTarget = textureLoader->loadTextureFromData("DefaultDepthStencilTarget", texDesc, nullptr, 16);
 
 	screenMesh = meshLoader->getMesh("Quad");
+
+	addRenderCall<ChangeShaders>({ 5,defaultVertexShader,defaultPixelShader });
 }
 
 
@@ -236,9 +250,6 @@ void Renderer::draw()
 
 	//Draw defaultrendertarget to window render target
 	window->bindRenderTarget();
-	//Set shaders to draw to screen
-	//screenVertexShader->bindShader(deviceContext.Get());
-	//screenPixelShader->bindShader(deviceContext.Get());
 
 	ID3D11ShaderResourceView* defaultSRV[1]{defaultRenderTarget->getSRV()};
 	ID3D11ShaderResourceView* emptySRV[1]{nullptr};
@@ -293,6 +304,8 @@ void Renderer::InitRender()
 	deviceContext->ClearDepthStencilView(defaultDepthStencilTarget->getDSV(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	deviceContext->OMSetRenderTargets(1, rtv, defaultDepthStencilTarget->getDSV());
 	deviceContext->RSSetViewports(1, &viewport);
+
+	deviceContext->PSSetSamplers(0, 1, defaultSamplerState.GetAddressOf());
 
 	//Add final render calls to draw to window rtv
 	addRenderCall<ChangeShaders>({ 0,screenVertexShader,screenPixelShader });
@@ -352,9 +365,6 @@ void Renderer::DrawPortalInternalsFunc()
 	ID3D11RenderTargetView* rtvs[1]{portalRenderTarget->getRTV()};
 	deviceContext->OMSetRenderTargets(1, rtvs, defaultDepthStencilTarget->getDSV());
 	deviceContext->RSSetViewports(1, &viewport);
-
-	//Update camera to custom one
-
 }
 
 void Renderer::ResetPortalData()
