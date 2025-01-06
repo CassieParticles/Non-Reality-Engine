@@ -55,6 +55,8 @@ protected:
 
 	std::unique_ptr<Timer> timer;
 
+	bool drawPortalInternals=true;
+
 
 protected:
 	//This is needed to track which object the player is on 

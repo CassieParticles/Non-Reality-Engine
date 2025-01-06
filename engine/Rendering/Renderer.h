@@ -109,9 +109,10 @@ protected:
 
 	Texture2D* defaultRenderTarget;
 	Texture2D* defaultDepthStencilTarget;
-	D3D11_VIEWPORT viewport;
+	D3D11_VIEWPORT defaultViewport;
 
 	Texture2D* portalRenderTarget;
+	Texture2D* portalDepthStencilTarget;
 
 	void resize();
 

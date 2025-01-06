@@ -95,7 +95,7 @@ void BaseGameLoop::render()
 {
 	window->clearBackBuffer();
 	window->bindRenderTarget();
-	scene->renderLayer((*playerObject)->getComponent<TransformComponent>()->layer,true);
+	scene->renderLayer((*playerObject)->getComponent<TransformComponent>()->layer,drawPortalInternals);
 }
 
 void BaseGameLoop::guiRender()

@@ -17,4 +17,5 @@ void PortalInternalsComponent::Render(bool RenderPortals)
 
 	//Draw other layer
 	//TODO: Draw other layer
+	scene->renderLayer(0, false);
 }

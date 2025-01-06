@@ -43,14 +43,14 @@ void PortalCameraComponent::Render(bool shouldDrawPortals)
 
 	//Get the vector from the player camera to this portal
 	DirectX::XMFLOAT3 CA;
-	CA.x = playerTransform->position.x - thisPortalTransform->position.x;
-	CA.y = playerTransform->position.y - thisPortalTransform->position.y;
-	CA.z = playerTransform->position.z - thisPortalTransform->position.z;
+	CA.x = playerTransform->position.x - thisPortalTransform->position.x + otherPortalTransform->position.x;
+	CA.y = playerTransform->position.y - thisPortalTransform->position.y + otherPortalTransform->position.y;
+	CA.z = playerTransform->position.z - thisPortalTransform->position.z + otherPortalTransform->position.z;
 
 	//Multiply x,y, and z components by -1
-	CA.x *= -1;
-	CA.y *= -1;
-	CA.z *= -1;
+	//CA.x *= -1;
+	//CA.y *= -1;
+	//CA.z *= -1;
 	DirectX::XMVECTOR cameraDisp = DirectX::XMLoadFloat3(&CA);
 
 	//Get the difference between the angles
@@ -77,11 +77,11 @@ void PortalCameraComponent::Render(bool shouldDrawPortals)
 	//Create view matrix from these
 	DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixLookToLH(cameraDisp, playerLookAt, playerLookUp);
 
-	//Calculate near clip plane in camera space
+	//Calculate near clip plane (portal suface) in camera space
 	
 
 	//Get portal surface in model space
-	DirectX::XMVECTOR planeSurface = { 0,0,-1,1 };
+	DirectX::XMVECTOR planeSurface = { 0,0,-1,-0.01 };
 
 	//Convert into world space (multiply by inverse transpose of world matrix)
 	DirectX::XMMATRIX OtherPortalWorldMatrix = otherPortalTransform->calcWorldMatrix();
@@ -98,7 +98,15 @@ void PortalCameraComponent::Render(bool shouldDrawPortals)
 	DirectX::XMStoreFloat4(&planeSurfaceComp, planeSurface);
 
 	//Get the projection matrix that will be used
-	DirectX::XMFLOAT4X4 obliqueMatrix = obliqueView.calcProjectionMatrixNearClip(planeSurfaceComp);
+	DirectX::XMFLOAT4X4 obliqueMatrixComp = obliqueView.calcProjectionMatrixNearClip(planeSurfaceComp);
+
+	//Get the view matrix
+
+	DirectX::XMMATRIX obliqueMatrix = DirectX::XMLoadFloat4x4(&obliqueMatrixComp);
+	DirectX::XMMATRIX cameraMatrix = viewMatrix * obliqueMatrix;
+	DirectX::XMFLOAT4X4 cameraMatrixComp;
+	DirectX::XMStoreFloat4x4(&cameraMatrixComp, cameraMatrix);
 	
-	
+	renderer->addRenderCall<DrawPortalSetCamera>({ 0,cameraMatrixComp });
+
 }
