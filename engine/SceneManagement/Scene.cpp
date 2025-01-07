@@ -19,7 +19,9 @@ Scene::~Scene()
 
 GameObject* Scene::CreateGameObject(int layer)
 {
-	return layers[layer].CreateGameObject(device, deviceContext, renderer,input);
+	GameObject* GO = layers[layer].CreateGameObject(device, deviceContext, renderer, input);
+	GO->getComponent<TransformComponent>()->layer = layer;
+	return GO;
 }
 
 void Scene::destroyGameObject(GameObject* object, int layer)
@@ -71,7 +73,7 @@ GameObject* Scene::moveGameObject(GameObjectAllocator* from, GameObjectAllocator
 	//Increment gameObjectCount of old array
 	++to->gameObjectCount;
 
-	
+
 
 	return newPtr;
 }

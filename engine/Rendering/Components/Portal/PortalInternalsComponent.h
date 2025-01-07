@@ -14,4 +14,6 @@ public:
 	void Render(bool RenderPortals) override;
 protected:
 	Scene* scene;
+
+	int otherPortalScene = -1;
 };

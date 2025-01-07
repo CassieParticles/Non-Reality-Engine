@@ -17,5 +17,17 @@ void PortalInternalsComponent::Render(bool RenderPortals)
 
 	//Draw other layer
 	//TODO: Draw other layer
-	scene->renderLayer(0, false);
+	if (otherPortalScene == -1)
+	{
+		if (PortalComponent* otherPortalComp = gameObject->getComponent<PortalComponent>()->getOtherPortal())
+		{
+			otherPortalScene = otherPortalComp->getGameObject()->getComponent<TransformComponent>()->layer;
+		}
+	}
+	else
+	{
+		scene->renderLayer(otherPortalScene, false);
+
+	}
+
 }
