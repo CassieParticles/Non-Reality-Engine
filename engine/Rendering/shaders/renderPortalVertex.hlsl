@@ -32,10 +32,7 @@ VSOutput Main(VSInput input)
     output.normal = input.normal;
     output.normal = mul((float3x3) worldMatrix, output.normal);
     
-    //Convert screen space position
-    output.uv = output.position.xy / output.position.w;
-    output.uv *= float2(0.5, -0.5);
-    output.uv += 0.5;
+    //UVs calcualted in pixel shader
 
     return output;
 }

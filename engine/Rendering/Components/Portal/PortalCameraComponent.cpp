@@ -43,9 +43,9 @@ void PortalCameraComponent::Render(bool shouldDrawPortals)
 
 	//Get the vector from the player camera to this portal
 	DirectX::XMFLOAT3 CA;
-	CA.x = playerTransform->position.x - thisPortalTransform->position.x + otherPortalTransform->position.x;
-	CA.y = playerTransform->position.y - thisPortalTransform->position.y + otherPortalTransform->position.y;
-	CA.z = playerTransform->position.z - thisPortalTransform->position.z + otherPortalTransform->position.z;
+	CA.x = playerTransform->position.x - thisPortalTransform->position.x;
+	CA.y = playerTransform->position.y - thisPortalTransform->position.y;
+	CA.z = playerTransform->position.z - thisPortalTransform->position.z; 
 
 	//Multiply x,y, and z components by -1
 	//CA.x *= -1;
@@ -57,31 +57,33 @@ void PortalCameraComponent::Render(bool shouldDrawPortals)
 	DirectX::XMVECTOR thisPortalAngle = DirectX::XMLoadFloat3(&thisPortalTransform->rotation);
 	DirectX::XMVECTOR otherPortalAngle = DirectX::XMLoadFloat3(&otherPortalTransform->rotation);
 	DirectX::XMVECTOR deltaAngle = otherPortalAngle - thisPortalAngle;
-	DirectX::XMMATRIX deltaAngleMat = DirectX::XMMatrixRotationRollPitchYawFromVector(deltaAngle);
+	DirectX::XMVECTOR angleOffset = deltaAngle + DirectX::XMVECTOR{ 0,3.14159f,0,0 };
+	DirectX::XMMATRIX deltaAngleMat = DirectX::XMMatrixRotationRollPitchYawFromVector(angleOffset);
 
 	//Rotate the camera displacement
 	cameraDisp = DirectX::XMVector3Transform(cameraDisp,deltaAngleMat);
 
 	//Get the position of the camera
-	DirectX::XMVECTOR cameraPos = DirectX::XMLoadFloat3(&otherPortalTransform->position);
-	cameraPos += cameraDisp;
+	DirectX::XMVECTOR otherCameraPos = DirectX::XMLoadFloat3(&otherPortalTransform->position);
+	otherCameraPos += cameraDisp;
 
 	//Get the rotation of the other camera (forward and up vector)
-	DirectX::XMFLOAT3 playerRotation = playerTransform->rotation;
-	DirectX::XMMATRIX playerRotationMat = DirectX::XMMatrixRotationRollPitchYaw(playerRotation.x, playerRotation.y, playerRotation.z);
+	DirectX::XMVECTOR playerRotation = DirectX::XMLoadFloat3(&playerTransform->rotation);
+	playerRotation += angleOffset;
+	DirectX::XMMATRIX playerRotationMat = DirectX::XMMatrixRotationRollPitchYawFromVector(playerRotation);
 	DirectX::XMVECTOR playerLookAt = DirectX::XMVector3Transform({ 0,0,1,0 }, playerRotationMat);
 	playerLookAt = DirectX::XMVector3Transform(playerLookAt, deltaAngleMat);
 	DirectX::XMVECTOR playerLookUp = DirectX::XMVector3Transform({ 0,1,0,0 }, playerRotationMat);
 	playerLookUp = DirectX::XMVector3Transform(playerLookUp, deltaAngleMat);
 
 	//Create view matrix from these
-	DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixLookToLH(cameraDisp, playerLookAt, playerLookUp);
+	DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixLookToLH(otherCameraPos, playerLookAt, playerLookUp);
 
-	//Calculate near clip plane (portal suface) in camera space
+	//Calculate near clip plane (portal suface) in camera spaceFor 
 	
 
 	//Get portal surface in model space
-	DirectX::XMVECTOR planeSurface = { 0,0,-1,-0.01 };
+	DirectX::XMVECTOR planeSurface = { 0,0,-1, 0 };
 
 	//Convert into world space (multiply by inverse transpose of world matrix)
 	DirectX::XMMATRIX OtherPortalWorldMatrix = otherPortalTransform->calcWorldMatrix();

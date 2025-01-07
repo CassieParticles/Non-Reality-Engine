@@ -16,6 +16,9 @@ SamplerState sampler0 : register(s0);
 PSOutput Main(PSInput input)
 {
 	PSOutput output;
+	
+    input.uv = input.position.xy;
+    input.uv = input.uv / float2(1024,1024);
     
 	output.colour = cTex.Sample(sampler0, input.uv);
 
