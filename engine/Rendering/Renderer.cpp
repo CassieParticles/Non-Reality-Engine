@@ -357,7 +357,7 @@ void Renderer::DrawPortalSurfaceFunc()
 
 	deviceContext->ClearDepthStencilView(portalDepthStencilTarget->getDSV(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-	float clearColour[4] = { 0,0,0,1 };
+	float clearColour[4] = { 0,0,1,1 };
 	//Clear portal internal render target, and set render targets
 	deviceContext->OMSetRenderTargets(0, nullptr, portalDepthStencilTarget->getDSV());
 	deviceContext->RSSetViewports(1, &defaultViewport);
@@ -372,7 +372,7 @@ void Renderer::DrawPortalSetCameraFunc(DirectX::XMFLOAT4X4 cameraMatrix)
 	DirectX::XMMATRIX* data = (DirectX::XMMATRIX*)mappedData.pData;
 	*data = camMatrix;
 	deviceContext->Unmap(cameraMatrixBuffer.Get(), 0);
-
+	
 	deviceContext->VSSetConstantBuffers(0, 1, cameraMatrixBuffer.GetAddressOf());
 }
 
@@ -382,7 +382,7 @@ void Renderer::DrawPortalInternalsFunc()
 	deviceContext->OMSetDepthStencilState(portalInsideDepthStencil.Get(), 1);
 
 	//Clear portal RTV
-	float clearColour[4] = { 0,0,0,1 };
+	float clearColour[4] = { 0,0,1,1 };
 	deviceContext->ClearRenderTargetView(portalRenderTarget->getRTV(), clearColour);
 
 	//Set render targets
