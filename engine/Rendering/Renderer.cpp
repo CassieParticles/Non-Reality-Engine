@@ -1,4 +1,5 @@
 #include "Renderer.h"
+#include "Renderer.h"
 
 #include <new>
 
@@ -28,7 +29,11 @@ template<>
 void Renderer::addRenderCall<PortalEnd>(PortalEnd drawCall);
 
 template<>
+void Renderer::addRenderCall<DrawPortal>(DrawPortal drawCall);
+
+template<>
 void Renderer::addRenderCall<ChangeShaders>(ChangeShaders drawCall);
+
 
 Renderer::Renderer(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> deviceContext, ShaderManager* shaderManager, TextureLoader* textureLoader, MeshLoader* meshLoader, Window* window, size_t renderStackInitialSize) :device{ device }, deviceContext{ deviceContext },window { window }
 {
@@ -54,6 +59,9 @@ Renderer::Renderer(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> devi
 
 	screenVertexShader = shaderManager->getVertexShader(L"shaders/renderScreenVertex.hlsl");
 	screenPixelShader = shaderManager->getPixelShader(L"shaders/renderScreenPixel.hlsl");
+
+	portalVertexShader = shaderManager->getVertexShader(L"shaders/renderPortalVertex.hlsl");
+	portalPixelShader = shaderManager->getPixelShader(L"shaders/renderPortalPixel.hlsl");
 
 	D3D11_INPUT_ELEMENT_DESC inputArr[3]
 	{
@@ -231,12 +239,19 @@ void Renderer::draw()
 		}
 		else if (*current == 4)
 		{
+			DrawPortal* drawPortalCall = (DrawPortal*)current;
+			DrawPortalFinalFunc(drawPortalCall->mesh, drawPortalCall->worldMatrix);
+			current += sizeof(DrawPortal);
+			index += sizeof(DrawPortal);
+		}
+		else if (*current == 5)
+		{
 			ResetPortalData();
 			current += sizeof(PortalEnd);
 			index+=sizeof(PortalEnd);
 		}
 		
-		else if (*current == 5)
+		else if (*current == 6)
 		{
 			//Change shaders
 			ChangeShaders* changeShaders = (ChangeShaders*)current;
@@ -376,6 +391,38 @@ void Renderer::DrawPortalInternalsFunc()
 	deviceContext->RSSetViewports(1, &defaultViewport);
 }
 
+void Renderer::DrawPortalFinalFunc(Mesh* mesh,DirectX::XMFLOAT4X4 worldMatrix)
+{
+	//Set 
+	ID3D11RenderTargetView* rtv[1] = { defaultRenderTarget->getRTV() };
+
+	//Set render target to default
+	deviceContext->OMSetRenderTargets(1, rtv, defaultDepthStencilTarget->getDSV());
+	deviceContext->RSSetViewports(1, &defaultViewport);
+
+	deviceContext->OMSetDepthStencilState(defaultDepthStencil.Get(), 1);
+
+	//Set camera to main one
+	setMainCamera();
+
+	//Set mesh's world matrix
+	D3D11_MAPPED_SUBRESOURCE mappedData;
+	deviceContext->Map(worldMatrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData);
+	DirectX::XMFLOAT4X4* data = (DirectX::XMFLOAT4X4*)mappedData.pData;
+	*data = worldMatrix;
+	deviceContext->Unmap(worldMatrixBuffer.Get(), 0);
+
+	mesh->useMesh(deviceContext.Get());
+	deviceContext->VSSetConstantBuffers(1, 1, worldMatrixBuffer.GetAddressOf());
+	ID3D11ShaderResourceView* srvs[1]{ portalRenderTarget->getSRV() };
+	deviceContext->PSSetShaderResources(0, 1, srvs);
+
+	portalVertexShader->bindShader(deviceContext.Get());
+	portalPixelShader->bindShader(deviceContext.Get());
+
+	deviceContext->DrawIndexed(mesh->getVertexCount(), 0, 0);
+}
+
 void Renderer::ResetPortalData()
 {
 	deviceContext->OMSetDepthStencilState(defaultDepthStencil.Get(), 1);
@@ -383,6 +430,9 @@ void Renderer::ResetPortalData()
 	ID3D11RenderTargetView* rtv[1] = { defaultRenderTarget->getRTV() };
 	deviceContext->OMSetRenderTargets(1, rtv, defaultDepthStencilTarget->getDSV());
 	deviceContext->RSSetViewports(1, &defaultViewport);
+
+	defaultVertexShader->bindShader(deviceContext.Get());
+	defaultPixelShader->bindShader(deviceContext.Get());
 
 	//Set camera to main one
 	setMainCamera();
@@ -424,16 +474,23 @@ void Renderer::addRenderCall<DrawPortalInternals>(DrawPortalInternals drawCall)
 }
 
 template<>
-void Renderer::addRenderCall<PortalEnd>(PortalEnd drawCall)
+void Renderer::addRenderCall<DrawPortal>(DrawPortal drawCall)
 {
 	drawCall.flag = 4;
+	addRenderCallPriv<DrawPortal>(drawCall);
+}
+
+template<>
+void Renderer::addRenderCall<PortalEnd>(PortalEnd drawCall)
+{
+	drawCall.flag = 5;
 	addRenderCallPriv<PortalEnd>(drawCall);
 }
 
 template<>
 void Renderer::addRenderCall<ChangeShaders>(ChangeShaders drawCall)
 {
-	drawCall.flag = 5;
+	drawCall.flag = 6;
 	addRenderCallPriv<ChangeShaders>(drawCall);
 }
 

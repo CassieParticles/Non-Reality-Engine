@@ -37,15 +37,22 @@ struct DrawPortalInternals
 	byte flag;	//3
 };
 
+struct DrawPortal
+{
+	byte flag; //4
+	Mesh* mesh;
+	DirectX::XMFLOAT4X4 worldMatrix;
+};
+
 
 struct PortalEnd
 {
-	byte flag;	//4
+	byte flag;	//5
 };
 
 struct ChangeShaders
 {
-	byte flag;	//5
+	byte flag;	//6
 	VertexShader* vs;
 	PixelShader* ps;
 };
@@ -63,7 +70,7 @@ class Renderer
 	using ComPtr = Microsoft::WRL::ComPtr<T>;
 public:
 	Renderer(ComPtr<ID3D11Device> device,ComPtr<ID3D11DeviceContext> deviceContext,ShaderManager* shaderManager,TextureLoader* textureLoader, MeshLoader* meshLoader,Window* window,size_t renderStackInitialSize);
-	Renderer(Renderer& other);
+	Renderer(Renderer& other) = delete;
 	Renderer(Renderer&& other);
 	~Renderer();
 	Renderer& operator=(Renderer& other) { return other; }
@@ -100,6 +107,10 @@ protected:
 
 	VertexShader* screenVertexShader;
 	PixelShader* screenPixelShader;
+
+	VertexShader* portalVertexShader;
+	PixelShader* portalPixelShader;
+
 	Mesh* screenMesh;
 
 	ComPtr<ID3D11DepthStencilState> defaultDepthStencil;
@@ -124,6 +135,7 @@ protected:
 	void DrawPortalSurfaceFunc();
 	void DrawPortalSetCameraFunc(DirectX::XMFLOAT4X4 cameraMatrix);
 	void DrawPortalInternalsFunc();
+	void DrawPortalFinalFunc(Mesh* mesh, DirectX::XMFLOAT4X4 worldMatrix);
 	void ResetPortalData();
 	void ChangeShadersFunc(VertexShader* vs, PixelShader* ps);
 
