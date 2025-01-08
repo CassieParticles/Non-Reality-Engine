@@ -1,11 +1,10 @@
 #include "PortalCameraComponent.h"
-#include "PortalCameraComponent.h"
-#include "PortalCameraComponent.h"
 
 #include <graphicsEngine/VectorMathOverloads.h>
 
 #include <engine/ObjectStructure/GameObject.h>
 #include <engine/Rendering/Components/Portal/PortalComponent.h>
+#include <engine/Rendering/Components/MeshComponent.h>
 
 //Portal camera is in charge of rendering the internals of the portal it is attached to, this means it moves around the other portal
 
@@ -34,6 +33,33 @@ void PortalCameraComponent::Render(bool shouldDrawPortals)
 {
 	if (!shouldDrawPortals) { return; }
 
+
+	//Set the camera matrix to the oblique camera matrix to render the other scene()
+	renderer->addRenderCall<DrawPortalSetCamera>({ 0,calcMatrix()});
+
+	//Draw the scene visible through the portal(PORTALDRAWSCENE)==============================
+	renderer->addRenderCall<DrawPortalInternals>({ 0 });
+
+	//Draw other layer
+	scene->renderLayer(gameObject->getComponent<PortalComponent>()->getOtherPortal()->getGameObject()->getComponent<TransformComponent>()->layer, false);
+	
+
+	//Draw the portal with the other scene as a texture(PORTALDRAWPORTAL)=========================
+	Mesh* mesh = gameObject->getComponent<MeshComponent>()->getMesh();
+
+	DirectX::XMMATRIX worldMatrix = gameObject->getComponent<TransformComponent>()->calcWorldMatrix();
+	DirectX::XMFLOAT4X4 worldMatrixSta;
+	DirectX::XMStoreFloat4x4(&worldMatrixSta, worldMatrix);
+
+	renderer->addRenderCall<DrawPortal>({ 0,mesh,worldMatrixSta });
+
+	//Reset render state to default (PORTALEND)===================================================
+	renderer->addRenderCall<PortalEnd>({ 0 });
+
+}
+
+DirectX::XMFLOAT4X4 PortalCameraComponent::calcMatrix()
+{
 	GameObject* otherPortal = gameObject->getComponent<PortalComponent>()->getOtherPortal()->getGameObject();
 
 	//Move the camera to the updated position
@@ -45,7 +71,7 @@ void PortalCameraComponent::Render(bool shouldDrawPortals)
 	DirectX::XMFLOAT3 CA;
 	CA.x = playerTransform->position.x - thisPortalTransform->position.x;
 	CA.y = playerTransform->position.y - thisPortalTransform->position.y;
-	CA.z = playerTransform->position.z - thisPortalTransform->position.z; 
+	CA.z = playerTransform->position.z - thisPortalTransform->position.z;
 
 	//Multiply x,y, and z components by -1
 	//CA.x *= -1;
@@ -61,7 +87,7 @@ void PortalCameraComponent::Render(bool shouldDrawPortals)
 	DirectX::XMMATRIX deltaAngleMat = DirectX::XMMatrixRotationRollPitchYawFromVector(angleOffset);
 
 	//Rotate the camera displacement
-	cameraDisp = DirectX::XMVector3Transform(cameraDisp,deltaAngleMat);
+	cameraDisp = DirectX::XMVector3Transform(cameraDisp, deltaAngleMat);
 
 	//Get the position of the camera
 	DirectX::XMVECTOR otherCameraPos = DirectX::XMLoadFloat3(&otherPortalTransform->position);
@@ -78,11 +104,11 @@ void PortalCameraComponent::Render(bool shouldDrawPortals)
 	DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixLookToLH(otherCameraPos, playerLookAt, playerLookUp);
 
 	//Calculate near clip plane (portal suface) in camera spaceFor 
-	
+
 
 	//Get portal surface in model space
 	DirectX::XMFLOAT4 planeSurfaceComp;
-	DirectX::XMVECTOR planeSurface = {0,0,-1,0};
+	DirectX::XMVECTOR planeSurface = { 0,0,-1,0 };
 
 	DirectX::XMMATRIX otherPortalWorldMatrix = otherPortalTransform->calcWorldMatrix();
 	otherPortalWorldMatrix = DirectX::XMMatrixTranspose(DirectX::XMMatrixInverse(nullptr, otherPortalWorldMatrix));
@@ -105,7 +131,6 @@ void PortalCameraComponent::Render(bool shouldDrawPortals)
 	DirectX::XMMATRIX cameraMatrix = viewMatrix * obliqueMatrix;
 	DirectX::XMFLOAT4X4 cameraMatrixComp;
 	DirectX::XMStoreFloat4x4(&cameraMatrixComp, cameraMatrix);
-	
-	renderer->addRenderCall<DrawPortalSetCamera>({ 0,cameraMatrixComp });
 
+	return cameraMatrixComp;
 }

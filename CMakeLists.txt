@@ -16,7 +16,6 @@ list(APPEND ENGINE "engine/Rendering/Components/PlayerCameraComponent.cpp")
 
 list(APPEND ENGINE "engine/Rendering/Components/Portal/PortalComponent.cpp")
 list(APPEND ENGINE "engine/Rendering/Components/Portal/PortalCameraComponent.cpp")
-list(APPEND ENGINE "engine/Rendering/Components/Portal/PortalInternalsComponent.cpp")
 
 list(APPEND ENGINE "engine/SceneManagement/Timer.cpp")
 list(APPEND ENGINE "engine/SceneManagement/Scene.cpp")
