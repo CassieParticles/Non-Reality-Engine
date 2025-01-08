@@ -23,5 +23,7 @@ void PortalDrawComponent::Render(bool RenderPortals)
 		DirectX::XMStoreFloat4x4(&worldMatrixSta, worldMatrix);
 
 		renderer->addRenderCall<DrawPortal>({0,mesh,worldMatrixSta});
+
+		renderer->addRenderCall<PortalEnd>({ 0 });
 	}
 }

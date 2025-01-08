@@ -3,7 +3,6 @@
 #include <engine/ObjectStructure/GameObject.h>
 
 #include<engine/Rendering/Components/MeshComponent.h>
-#include <engine/Rendering/Components/Portal/PortalEndComponent.h>
 
 PortalComponent::PortalComponent(GameObject* gameObject,Renderer* renderer):RenderComponent{gameObject,renderer}
 {
