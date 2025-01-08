@@ -22,6 +22,7 @@ public:
 	void setTexture(const std::string& name, TextureLoader* meshLoader);
 
 	Mesh* getMesh() { return mesh; }
+	Texture2D* getTexture() { return texture; }
 
 	void Render(bool RenderPortals) override;
 protected:
