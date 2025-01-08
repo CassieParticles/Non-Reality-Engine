@@ -81,23 +81,22 @@ void PortalCameraComponent::Render(bool shouldDrawPortals)
 	
 
 	//Get portal surface in model space
-	DirectX::XMVECTOR planeSurface = { 0,0,-1, 0 };
-
-	//Convert into world space (multiply by inverse transpose of world matrix)
-	DirectX::XMMATRIX OtherPortalWorldMatrix = otherPortalTransform->calcWorldMatrix();
-	DirectX::XMMATRIX invTrsWrldMat = DirectX::XMMatrixTranspose(OtherPortalWorldMatrix);
-	invTrsWrldMat = DirectX::XMMatrixInverse(nullptr,OtherPortalWorldMatrix);
-	planeSurface = DirectX::XMVector4Transform(planeSurface, invTrsWrldMat);
-
-	//Convert into camera space (multiple by inverse transpose of view matrix)
-	DirectX::XMMATRIX invTrsViewMat = DirectX::XMMatrixTranspose(viewMatrix);
-	invTrsViewMat = DirectX::XMMatrixInverse(nullptr,invTrsViewMat);
-	planeSurface = DirectX::XMVector4Transform(planeSurface, invTrsViewMat);
-
 	DirectX::XMFLOAT4 planeSurfaceComp;
-	DirectX::XMStoreFloat4(&planeSurfaceComp, planeSurface);
+	DirectX::XMVECTOR planeSurface = {0,0,-1,0};
+
+	DirectX::XMMATRIX otherPortalWorldMatrix = otherPortalTransform->calcWorldMatrix();
+	otherPortalWorldMatrix = DirectX::XMMatrixTranspose(DirectX::XMMatrixInverse(nullptr, otherPortalWorldMatrix));
+
+	//Transform the plane into world space using the inverse transpose of the other portal's world matrix
+	planeSurface = DirectX::XMVector4Transform(planeSurface, otherPortalWorldMatrix);
+
+
+	//Transform the plane into view space using the inverse transpose of the camera's view matrix
+	DirectX::XMMATRIX viewMatrixForSurface = DirectX::XMMatrixTranspose(DirectX::XMMatrixInverse(nullptr, viewMatrix));
+	planeSurface = DirectX::XMVector4Transform(planeSurface, viewMatrixForSurface);
 
 	//Get the projection matrix that will be used
+	DirectX::XMStoreFloat4(&planeSurfaceComp, planeSurface);
 	DirectX::XMFLOAT4X4 obliqueMatrixComp = obliqueView.calcProjectionMatrixNearClip(planeSurfaceComp);
 
 	//Get the view matrix

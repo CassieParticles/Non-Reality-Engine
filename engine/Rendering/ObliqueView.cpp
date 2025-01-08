@@ -18,7 +18,7 @@ ObliqueView::ObliqueView(ObliqueView&& other) :View{ other }
 //Derived from : https://terathon.com/lengyel/Lengyel-Oblique.pdf
 DirectX::XMFLOAT4X4 ObliqueView::calcProjectionMatrixNearClip(DirectX::XMFLOAT4 nearClipPlane)
 {
-	return projectionMatrix;
+	//return projectionMatrix;
 	
 	DirectX::XMVECTOR c = DirectX::XMLoadFloat4(&nearClipPlane);
 	//Get the transpose of the inverse of the projection matrix
