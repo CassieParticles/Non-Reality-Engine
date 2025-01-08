@@ -33,6 +33,16 @@ void PortalCameraComponent::Render(bool shouldDrawPortals)
 {
 	if (!shouldDrawPortals) { return; }
 
+	//Map the portal surface into the stencil buffer(MAPPORTALSURFACE)
+
+	//Get world matrix of game object
+	DirectX::XMMATRIX worldMatrix = gameObject->getComponent<TransformComponent>()->calcWorldMatrix();
+	DirectX::XMFLOAT4X4 worldMatrixSta;
+	DirectX::XMStoreFloat4x4(&worldMatrixSta, worldMatrix);
+
+	Mesh* mesh = gameObject->getComponent<MeshComponent>()->getMesh();
+
+	renderer->addRenderCall<DrawMesh>({ 0,mesh,nullptr,worldMatrixSta });
 
 	//Set the camera matrix to the oblique camera matrix to render the other scene()
 	renderer->addRenderCall<DrawPortalSetCamera>({ 0,calcMatrix()});
@@ -45,11 +55,6 @@ void PortalCameraComponent::Render(bool shouldDrawPortals)
 	
 
 	//Draw the portal with the other scene as a texture(PORTALDRAWPORTAL)=========================
-	Mesh* mesh = gameObject->getComponent<MeshComponent>()->getMesh();
-
-	DirectX::XMMATRIX worldMatrix = gameObject->getComponent<TransformComponent>()->calcWorldMatrix();
-	DirectX::XMFLOAT4X4 worldMatrixSta;
-	DirectX::XMStoreFloat4x4(&worldMatrixSta, worldMatrix);
 
 	renderer->addRenderCall<DrawPortal>({ 0,mesh,worldMatrixSta });
 

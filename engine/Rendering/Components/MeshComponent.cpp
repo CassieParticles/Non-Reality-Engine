@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include <graphicsEngine/Pipeline/Texture2D.h>
+#include "Portal/PortalComponent.h"
 
 MeshComponent::MeshComponent(GameObject* gameObject, Renderer* renderer) :RenderComponent{ gameObject,renderer }, mesh{ nullptr }
 {
@@ -37,9 +38,8 @@ void MeshComponent::setTexture(const std::string& name, TextureLoader* textureLo
 
 void MeshComponent::Render(bool RenderPortals)
 {
-	//Get device context
-	ID3D11DeviceContext* deviceContext = gameObject->getDeviceContext();
-
+	//Don't render as a standard mesh if part of a portal (portal rendering handled separately)
+	if (gameObject->getComponent<PortalComponent>()) { return; }
 	//Get world matrix of game object
 	DirectX::XMMATRIX worldMatrix = gameObject->getComponent<TransformComponent>()->calcWorldMatrix();
 	DirectX::XMFLOAT4X4 worldMatrixSta;
