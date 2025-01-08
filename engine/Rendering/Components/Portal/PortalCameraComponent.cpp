@@ -72,9 +72,7 @@ void PortalCameraComponent::Render(bool shouldDrawPortals)
 	playerRotation += angleOffset;
 	DirectX::XMMATRIX playerRotationMat = DirectX::XMMatrixRotationRollPitchYawFromVector(playerRotation);
 	DirectX::XMVECTOR playerLookAt = DirectX::XMVector3Transform({ 0,0,1,0 }, playerRotationMat);
-	playerLookAt = DirectX::XMVector3Transform(playerLookAt, deltaAngleMat);
 	DirectX::XMVECTOR playerLookUp = DirectX::XMVector3Transform({ 0,1,0,0 }, playerRotationMat);
-	playerLookUp = DirectX::XMVector3Transform(playerLookUp, deltaAngleMat);
 
 	//Create view matrix from these
 	DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixLookToLH(otherCameraPos, playerLookAt, playerLookUp);
