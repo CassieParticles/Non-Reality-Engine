@@ -357,8 +357,7 @@ void Renderer::DrawPortalSurfaceFunc()
 
 	deviceContext->ClearDepthStencilView(portalDepthStencilTarget->getDSV(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-	float clearColour[4] = { 0,0,1,1 };
-	//Clear portal internal render target, and set render targets
+	//Set render targets
 	deviceContext->OMSetRenderTargets(0, nullptr, portalDepthStencilTarget->getDSV());
 	deviceContext->RSSetViewports(1, &defaultViewport);
 }
@@ -382,7 +381,7 @@ void Renderer::DrawPortalInternalsFunc()
 	deviceContext->OMSetDepthStencilState(portalInsideDepthStencil.Get(), 1);
 
 	//Clear portal RTV
-	float clearColour[4] = { 0,0,1,1 };
+	float clearColour[4] = { 0.2,0.4,0.6,1 };
 	deviceContext->ClearRenderTargetView(portalRenderTarget->getRTV(), clearColour);
 
 	//Set render targets
