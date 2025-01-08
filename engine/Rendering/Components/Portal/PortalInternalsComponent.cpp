@@ -14,10 +14,11 @@ void PortalInternalsComponent::Render(bool RenderPortals)
 {
 	if (!RenderPortals) { return; }
 	//Enable drawing the internals
+
+	//Draw the scene visible through the portal(PORTALDRAWSCENE)==============================
 	renderer->addRenderCall<DrawPortalInternals>({ 0 });
 
 	//Draw other layer
-	//TODO: Draw other layer
 	if (otherPortalScene == -1)
 	{
 		if (PortalComponent* otherPortalComp = gameObject->getComponent<PortalComponent>()->getOtherPortal())
@@ -30,6 +31,7 @@ void PortalInternalsComponent::Render(bool RenderPortals)
 		scene->renderLayer(otherPortalScene, false);
 	}
 
+	//Draw the portal with the other scene as a texture(PORTALDRAWPORTAL)=========================
 	Mesh* mesh = gameObject->getComponent<MeshComponent>()->getMesh();
 
 	DirectX::XMMATRIX worldMatrix = gameObject->getComponent<TransformComponent>()->calcWorldMatrix();
@@ -38,6 +40,7 @@ void PortalInternalsComponent::Render(bool RenderPortals)
 
 	renderer->addRenderCall<DrawPortal>({ 0,mesh,worldMatrixSta });
 
+	//Reset render state to default (PORTALEND)===================================================
 	renderer->addRenderCall<PortalEnd>({ 0 });
 
 }
