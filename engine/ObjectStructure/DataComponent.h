@@ -7,6 +7,7 @@ public:
 	DataComponent(GameObject* gameObject) :Component{ gameObject } {}
 	DataComponent(DataComponent& other) :Component{ other } {}
 	DataComponent(DataComponent&& other) :Component{ other } {}
+	~DataComponent() {}
 
 	virtual void Action() = 0;
 };

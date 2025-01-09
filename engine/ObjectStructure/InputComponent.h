@@ -9,7 +9,8 @@ public:
 	InputComponent(GameObject* gameObject) :Component{ gameObject } {}
 	InputComponent(InputComponent& other) :Component{ other } {}
 	InputComponent(InputComponent&& other) :Component{ other } {}
-	
+	~InputComponent() {}
+
 	//TODO: Add time manager
 	virtual void Input(InputHandler* input) = 0;
 };

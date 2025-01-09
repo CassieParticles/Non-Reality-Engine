@@ -1,4 +1,5 @@
 #include "BaseGameLoop.h"
+#include "BaseGameLoop.h"
 
 #include <graphicsEngine/Window.h>
 #include <engine/ResourceManager/ShaderManager.h>
@@ -89,6 +90,11 @@ void BaseGameLoop::handleInput()
 void BaseGameLoop::update()
 {
 	scene->update(timer.get());
+}
+
+void BaseGameLoop::physUpdate()
+{
+	scene->PhysUpdate(timer.get());
 }
 
 void BaseGameLoop::render()

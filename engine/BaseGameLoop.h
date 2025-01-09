@@ -32,6 +32,7 @@ public:
 
 	virtual void handleInput();
 	virtual void update();
+	virtual void physUpdate();
 	virtual void render();
 	virtual void guiRender();
 	virtual void exit();

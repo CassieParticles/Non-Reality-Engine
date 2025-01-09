@@ -90,6 +90,20 @@ void GameObjectAllocator::Update(Timer* timer)
 	}
 }
 
+void GameObjectAllocator::PhysUpdate(Timer* timer)
+{
+	int gameObjectsProcessed = 0;
+	for (int i = 0; i < gameObjectArray.size(); i += sizeof(GameObject))
+	{
+		if (gameObjectsProcessed == gameObjectCount) { break; }
+		if (gameObjectArray.at(i) == 0) { continue; }
+
+		GameObject* GO = (GameObject*)(gameObjectArray.data() + i);
+
+		GO->PhysUpdate(timer);
+	}
+}
+
 void GameObjectAllocator::Render(bool RenderPortals)
 {
 	int gameObjectsProcessed = 0;

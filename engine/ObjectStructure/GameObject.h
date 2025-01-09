@@ -12,6 +12,7 @@
 #include "DataComponent.h"
 #include "InputComponent.h"
 #include "UpdateComponent.h"
+#include "PhysicsComponent.h"
 #include "RenderComponent.h"
 
 #include <engine/Rendering/Renderer.h>
@@ -36,6 +37,7 @@ public:
 
 	void HandleInput();
 	void Update(Timer* timer);
+	void PhysUpdate(Timer* timer);
 	void Render(bool RenderPortals);
 
 	void moveGOLocation();
@@ -63,7 +65,6 @@ public:
 				}
 			}
 			dataComponents.emplace_back(std::make_unique<T>(this));
-			//Component last element in array, add
 			return dynamic_cast<T*>(dataComponents.at(dataComponents.size() - 1).get());
 		}
 	}
@@ -100,6 +101,23 @@ public:
 		}
 		updateComponents.emplace_back(std::make_unique<T>(this));
 		return dynamic_cast<T*>(updateComponents.at(updateComponents.size() - 1).get());
+	}
+
+	template<typename T>
+	T* addPhysicsComponent()
+	{
+		//Check if the component already exists
+		for (int i = 0; i < physicsComponents.size(); ++i)
+		{
+			PhysicsComponent* component = physicsComponents.at(i).get();
+			T* compTest = dynamic_cast<T*>(component);
+			if (compTest)
+			{
+				return compTest;
+			}
+		}
+		physicsComponents.emplace_back(std::make_unique<T>(this));
+		return dynamic_cast<T*>(physicsComponents.at(physicsComponents.size() - 1).get());
 	}
 
 	template<typename T>
@@ -170,6 +188,21 @@ public:
 				}
 			}
 		}
+		//Get update component
+		if (std::is_base_of<PhysicsComponent, T>())
+		{
+			//Check if the component already exists
+			for (int i = 0; i < updateComponents.size(); ++i)
+			{
+				PhysicsComponent* component = physicsComponents.at(i).get();
+				T* compTest = dynamic_cast<T*>(component);
+				if (compTest)
+				{
+					return compTest;
+				}
+			}
+		}
+
 		//Get render component
 		if (std::is_base_of<RenderComponent, T>())
 		{
@@ -204,5 +237,6 @@ protected:
 	std::vector<std::unique_ptr<DataComponent>> dataComponents;
 	std::vector<std::unique_ptr<InputComponent>> inputComponents;
 	std::vector<std::unique_ptr<UpdateComponent>> updateComponents;
+	std::vector<std::unique_ptr<PhysicsComponent>> physicsComponents;
 	std::vector<std::unique_ptr<RenderComponent>> renderComponents;
 };

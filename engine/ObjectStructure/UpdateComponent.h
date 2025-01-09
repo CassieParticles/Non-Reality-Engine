@@ -9,6 +9,7 @@ public:
 	UpdateComponent(GameObject* gameObject) :Component{ gameObject } {}
 	UpdateComponent(UpdateComponent& other) :Component{ other } {}
 	UpdateComponent(UpdateComponent&& other) :Component{ other } {}
+	~UpdateComponent() {}
 
 	//TODO: Add time manager
 	virtual void Update(Timer* timer) = 0;

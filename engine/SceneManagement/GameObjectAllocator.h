@@ -32,6 +32,7 @@ public:
 	
 	void handleInput();
 	void Update(Timer* timer);
+	void PhysUpdate(Timer* timer);
 	void Render(bool renderPortals);
 protected:
 	int getIndex(GameObject* gameObject);

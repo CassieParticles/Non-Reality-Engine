@@ -1,6 +1,7 @@
 #include "Scene.h"
 #include "Scene.h"
 #include "Scene.h"
+#include "Scene.h"
 
 #include "GameObjectAllocator.h"
 
@@ -38,6 +39,14 @@ void Scene::takeInput()
 }
 
 void Scene::update(Timer* timer)
+{
+	for (int i = 0; i < 8; ++i)
+	{
+		layers[i].Update(timer);
+	}
+}
+
+void Scene::PhysUpdate(Timer* timer)
 {
 	for (int i = 0; i < 8; ++i)
 	{

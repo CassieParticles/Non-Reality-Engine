@@ -9,6 +9,7 @@ public:
 	RenderComponent(GameObject* gameObject, Renderer* renderer) :Component{ gameObject }, renderer{ renderer } {}
 	RenderComponent(RenderComponent& other) :Component{ other } {}
 	RenderComponent(RenderComponent&& other) :Component{ other } {}
+	~RenderComponent() {}
 
 	//TODO: Add time manager
 	virtual void Render(bool RenderPortals) = 0;

@@ -1,6 +1,5 @@
 #include "GameObject.h"
 #include "GameObject.h"
-#include "GameObject.h"
 #include <engine/Rendering/Components/MeshComponent.h>
 
 GameObject::GameObject(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> deviceContext, Renderer* renderer, InputHandler* input) :device{ device }, deviceContext{ deviceContext }, renderer{ renderer }, input{ input }, transformComponent { this }
@@ -47,6 +46,14 @@ void GameObject::Update(Timer* timer)
 	for (int i = 0; i < updateComponents.size(); ++i)
 	{
 		updateComponents.at(i)->Update(timer);
+	}
+}
+
+void GameObject::PhysUpdate(Timer* timer)
+{
+	for (int i = 0; i < physicsComponents.size(); ++i)
+	{
+		physicsComponents.at(i)->Update(timer);
 	}
 }
 
