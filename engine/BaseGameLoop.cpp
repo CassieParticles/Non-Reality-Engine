@@ -67,6 +67,7 @@ void BaseGameLoop::loop()
 	//Game loop
 	handleInput();
 	update();
+	physUpdate();
 	render();
 	guiRender();
 
