@@ -35,6 +35,9 @@ GameObject& GameObject::operator=(GameObject&& other)
 
 void GameObject::HandleInput()
 {
+	//First call, where last frame's position is set
+	transformComponent.setPositionLastFrame(transformComponent.position);
+
 	for (int i = 0; i < inputComponents.size(); ++i)
 	{
 		inputComponents.at(i)->Input(input);

@@ -27,9 +27,15 @@ public:
 	DirectX::XMFLOAT3 rotation;
 	DirectX::XMFLOAT3 scale;
 
+	//DO NOT CALL, FOR INTERNAL USE ONLY
+	void setPositionLastFrame(DirectX::XMFLOAT3& position) { positionLastFrame = position; }
+	DirectX::XMFLOAT3& getPositionLastFrame() { return positionLastFrame; }
+
 	//What layer object is on do not modify, needs to be public to allow other components to change
 	int layer;
 
 protected:
+	//Position last frame (used for collision detection)
+	DirectX::XMFLOAT3 positionLastFrame;
 
 };

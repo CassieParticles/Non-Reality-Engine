@@ -29,12 +29,14 @@ protected:
 	void addPlaneMesh();
 	void addCubeMesh();
 	void addQuadMesh();
+	void addSphereMesh();
+	//void addCylinderMesh();
 
 	/*Types of base mesh
 	*	-Plane - Done
 	*	-Cube - Done
-	*	-Quad
-	*	-Sphere
+	*	-Quad - Done
+	*	-Sphere - Done
 	*	-Disc
 	*	-Cylinder
 	*	-Capsule

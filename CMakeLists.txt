@@ -1,4 +1,4 @@
-﻿# CMakeList.txt : CMake project for Non Reality Engine, include source and define
+# CMakeList.txt : CMake project for Non Reality Engine, include source and define
 # project specific logic here.
 #
 
@@ -8,6 +8,8 @@ list(APPEND ENGINE "engine/ResourceManager/TextureLoader.cpp")
 
 list(APPEND ENGINE "engine/ObjectStructure/GameObject.cpp")
 list(APPEND ENGINE "engine/ObjectStructure/DefaultComponents/TransformComponent.cpp")
+
+list(APPEND ENGINE "engine/Physics/PortalSurfaceCollider.cpp")
 
 list(APPEND ENGINE "engine/Rendering/Renderer.cpp")
 list(APPEND ENGINE "engine/Rendering/ObliqueView.cpp")

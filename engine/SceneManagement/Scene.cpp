@@ -50,7 +50,7 @@ void Scene::PhysUpdate(Timer* timer)
 {
 	for (int i = 0; i < 8; ++i)
 	{
-		layers[i].Update(timer);
+		layers[i].PhysUpdate(timer);
 	}
 }
 

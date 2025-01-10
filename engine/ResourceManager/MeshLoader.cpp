@@ -1,5 +1,6 @@
 #include "MeshLoader.h"
 #include "MeshLoader.h"
+#include "MeshLoader.h"
 
 #include <iostream>
 #include <DirectXMath.h>
@@ -9,6 +10,7 @@ MeshLoader::MeshLoader(Microsoft::WRL::ComPtr<ID3D11Device> device):device{devic
 	addPlaneMesh();
 	addCubeMesh();
 	addQuadMesh();
+	addSphereMesh();
 }
 
 MeshLoader::MeshLoader(MeshLoader&& other)
@@ -174,4 +176,83 @@ void MeshLoader::addQuadMesh()
 	};
 
 	addMesh("Quad", quadVertices, 4, indices, 6, false);
+}
+
+//Thank you to https://danielsieger.com/blog/2021/03/27/generating-spheres.html for this
+void MeshLoader::addSphereMesh()
+{
+	std::vector<Mesh::MeshVertex> vertices;
+	std::vector<int> indices;
+
+	constexpr int numSlices = 30;
+	constexpr int numStacks = 30;
+
+	constexpr float invSlice = 1.0f / numSlices;
+	constexpr float invStack = 1.0f / numStacks;
+
+	//Assemble vertex array
+
+	//Add top vertices
+	vertices.push_back({ DirectX::XMFLOAT3{ 0,1,0 }, DirectX::XMFLOAT3{ 0,1,0 }, DirectX::XMFLOAT2{ 0,0 } });
+
+	//Add vertices within sphere
+	for (int stack = 0; stack < numStacks-1; ++stack)
+	{
+		float phi = 3.14159f * (stack + 1) / numStacks;
+		for (int slice = 0; slice < numSlices + 1; ++slice)
+		{
+			float theta = 2 * 3.14159 * slice / numSlices;
+			Mesh::MeshVertex vertex{};
+			vertex.position = DirectX::XMFLOAT3{ sin(phi) * cos(theta),cos(phi),sin(phi) * sin(theta) };
+			vertex.normal = vertex.position;
+			vertex.uv = DirectX::XMFLOAT2{slice * invSlice, stack * invStack};
+
+			vertices.push_back(vertex);
+		}
+	}
+
+	//Add bottom vertex
+	vertices.push_back({ DirectX::XMFLOAT3{ 0,-1,0 }, DirectX::XMFLOAT3{ 0,-1,0 }, DirectX::XMFLOAT2{ 0,1 } });
+
+	//Assemble index array
+
+
+	for (int i = 0; i < numSlices; ++i)
+	{
+		//Top triangle
+		indices.push_back(0);
+		indices.push_back((i + 1) % numSlices + 1);
+		indices.push_back(i + 1);
+
+		//Bottom triangle
+		indices.push_back(vertices.size() - 1);
+		indices.push_back(i + numSlices * (numStacks - 2) + 1);
+		indices.push_back((i + 1) % numSlices + numSlices * (numStacks - 2) + 1);
+	}
+
+	for (int stack = 0; stack < numStacks - 2; ++stack)
+	{
+		int stack0 = stack * numSlices + 1;
+		int stack1 = (stack + 1) * numSlices + 1;
+		for (int slice = 0; slice < numSlices; ++slice)
+		{
+			//Get the 4 corners of the quad
+			int slice0 = stack0 + slice;
+			int slice1 = stack0 + (slice + 1) % numSlices;
+			int slice2 = stack1 + (slice + 1) % numSlices;
+			int slice3 = stack1 + slice;
+
+			//Triangle 1
+			indices.push_back(slice0);
+			indices.push_back(slice1);
+			indices.push_back(slice2);
+
+			//Triangle 2
+			indices.push_back(slice0);
+			indices.push_back(slice2);
+			indices.push_back(slice3);
+		}
+	}
+
+	addMesh("Sphere", vertices.data(), vertices.size(), indices.data(), indices.size(), false);
 }

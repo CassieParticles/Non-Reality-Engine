@@ -7,6 +7,7 @@ class Scene;
 
 class PortalComponent : public RenderComponent
 {
+	friend class PortalSurfaceCollider;
 public:
 	PortalComponent(GameObject* gameObject,Renderer* renderer);
 	PortalComponent(PortalComponent& other);
@@ -28,6 +29,6 @@ protected:
 	ObliqueView obliqueView;
 
 
-	GameObject* player;
+	GameObject* player{};
 	Scene* scene;
 };
