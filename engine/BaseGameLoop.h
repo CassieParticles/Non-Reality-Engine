@@ -38,6 +38,7 @@ public:
 	virtual void exit();
 
 	void setPlayer(GameObject** gameObject) { playerObject = gameObject; }
+	GameObject** getPlayerVar() { return playerObject; }
 
 	bool getShouldClose() { return window->getWindowShouldClose(); }
 protected:

@@ -32,7 +32,7 @@ BaseGameLoop::BaseGameLoop(const std::string& windowName, int windowWidth, int w
 
 	timer = std::make_unique<Timer>();
 
-	scene = std::make_unique<Scene>(device, deviceContext, renderer.get(),input);
+	scene = std::make_unique<Scene>(device, deviceContext, renderer.get(),input,this);
 
 	
 	//Set up dearImGui

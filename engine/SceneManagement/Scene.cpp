@@ -1,13 +1,10 @@
 #include "Scene.h"
-#include "Scene.h"
-#include "Scene.h"
-#include "Scene.h"
 
-#include "GameObjectAllocator.h"
+#include <engine/SceneManagement/GameObjectAllocator.h>
+#include <engine/BaseGameLoop.h>
 
-Scene::Scene(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> deviceContext, Renderer* renderer,InputHandler* input) :device{ device }, deviceContext{ deviceContext }, renderer{ renderer },input{input}
+Scene::Scene(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> deviceContext, Renderer* renderer,InputHandler* input, BaseGameLoop* baseGameLoop) :device{ device }, deviceContext{ deviceContext }, renderer{ renderer },input{input},baseGameLoop{baseGameLoop}
 {
-	std::cout << "Create scene\n";
 	for (int i = 0; i < 8; ++i)
 	{
 		layers.emplace_back( 65535 );
@@ -82,6 +79,10 @@ GameObject* Scene::moveGameObject(GameObjectAllocator* from, GameObjectAllocator
 	//Increment gameObjectCount of old array
 	++to->gameObjectCount;
 
+	if (gameObject == *baseGameLoop->getPlayerVar())
+	{
+		*baseGameLoop->getPlayerVar() = newPtr;
+	}
 
 
 	return newPtr;
@@ -101,6 +102,8 @@ GameObject* Scene::moveGameObject(int from, int to, GameObject* gameObject)
 	GameObject* go = moveGameObject(fromPtr, toPtr, gameObject);
 
 	go->getComponent<TransformComponent>()->layer = to;
+
+	
 
 	return go;
 }

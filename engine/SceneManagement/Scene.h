@@ -5,15 +5,18 @@
 #include <engine/ObjectStructure/GameObject.h>
 #include <engine/Rendering/Renderer.h>
 
+
+
 class Timer;
 class GameObjectAllocator;
+class BaseGameLoop;
 
 class Scene
 {
 	template<typename T>
 	using ComPtr = Microsoft::WRL::ComPtr<T>;
 public:
-	Scene(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> deviceContext, Renderer* renderer, InputHandler* input);
+	Scene(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> deviceContext, Renderer* renderer, InputHandler* input,BaseGameLoop* baseGameLoop);
 	~Scene();
 
 	GameObject* CreateGameObject(int layer);
@@ -40,4 +43,5 @@ protected:
 
 	Renderer* renderer;
 	InputHandler* input;
+	BaseGameLoop* baseGameLoop;
 };

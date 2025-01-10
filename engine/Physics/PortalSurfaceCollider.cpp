@@ -4,6 +4,7 @@
 
 #include <engine/ObjectStructure/GameObject.h>
 #include <engine/Rendering/Components/Portal/PortalComponent.h>
+#include <engine/SceneManagement/Scene.h>
 
 PortalSurfaceCollider::PortalSurfaceCollider(GameObject* gameObject):PhysicsComponent{gameObject}
 {
@@ -142,4 +143,6 @@ void PortalSurfaceCollider::TeleportPlayer(DirectX::XMFLOAT3 collisionPoint)
 	//Set the new position
 	playerTransform->position = newPosition;
 	playerTransform->setPositionLastFrame(newPosition);
+
+	player = gameObject->getComponent<PortalComponent>()->scene->moveGameObject(thisPortalTransform->layer, otherPortalTransform->layer, player);
 }
