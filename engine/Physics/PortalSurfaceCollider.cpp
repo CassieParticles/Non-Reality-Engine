@@ -80,15 +80,31 @@ void PortalSurfaceCollider::Update(Timer* timer)
 		{
 			if (QMdlSpaceComp.y > -0.5 && QMdlSpaceComp.y < 0.5)
 			{
-				TransformComponent* playerTrans = player->getComponent<TransformComponent>();
-				playerTrans->position = gameObject->getComponent<PortalComponent>()->getOtherPortal()->getGameObject()->getComponent<TransformComponent>()->position;
-				playerTrans->setPositionLastFrame(gameObject->getComponent<PortalComponent>()->getOtherPortal()->getGameObject()->getComponent<TransformComponent>()->position);
+				TeleportPlayer();
 			}
-			
 		}
-
-		
 	}
-	
+}
 
+void PortalSurfaceCollider::TeleportPlayer()
+{
+	TransformComponent* thisPortalTransform = gameObject->getComponent<TransformComponent>();
+	TransformComponent* otherPortalTransform = gameObject->getComponent<PortalComponent>()->getOtherPortal()->gameObject->getComponent<TransformComponent>();
+
+	//Rotate the player
+	DirectX::XMVECTOR thisPortalAngle = DirectX::XMLoadFloat3(&thisPortalTransform->rotation);
+	DirectX::XMVECTOR otherPortalAngle = DirectX::XMLoadFloat3(&otherPortalTransform->rotation);
+	DirectX::XMVECTOR deltaAngle = otherPortalAngle - thisPortalAngle;
+	DirectX::XMVECTOR angleOffset = deltaAngle + DirectX::XMVECTOR{ 0,3.14159f,0,0 };
+
+	DirectX::XMFLOAT3 angleOffsetComp;
+	DirectX::XMStoreFloat3(&angleOffsetComp, angleOffset);
+	player->getComponent<TransformComponent>()->rotation.x += angleOffsetComp.x;
+	player->getComponent<TransformComponent>()->rotation.y += angleOffsetComp.y;
+	player->getComponent<TransformComponent>()->rotation.z += angleOffsetComp.z;
+
+	//Move the player to the other portal
+	TransformComponent* playerTrans = player->getComponent<TransformComponent>();
+	playerTrans->position = gameObject->getComponent<PortalComponent>()->getOtherPortal()->getGameObject()->getComponent<TransformComponent>()->position;
+	playerTrans->setPositionLastFrame(gameObject->getComponent<PortalComponent>()->getOtherPortal()->getGameObject()->getComponent<TransformComponent>()->position);
 }

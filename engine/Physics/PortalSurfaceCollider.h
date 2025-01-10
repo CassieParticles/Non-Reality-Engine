@@ -11,4 +11,6 @@ public:
 	void Update(Timer* timer) override;
 protected:
 	GameObject* player{};
+
+	void TeleportPlayer();
 };
