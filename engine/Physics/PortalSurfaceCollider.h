@@ -11,7 +11,7 @@ public:
 
 	void Update(Timer* timer) override;
 protected:
-	GameObject* player{};
+	GameObject** player{};
 
 	void TeleportPlayer(DirectX::XMFLOAT3 collisionPoint);
 };

@@ -40,8 +40,8 @@ void PortalSurfaceCollider::Update(Timer* timer)
 	float w = planeComp.w;
 
 	//Get ends of the line that marks the player's movement this frame
-	DirectX::XMFLOAT3 lastPosComp = player->getComponent<TransformComponent>()->getPositionLastFrame();	
-	DirectX::XMFLOAT3 currPosComp = player->getComponent<TransformComponent>()->position;
+	DirectX::XMFLOAT3 lastPosComp = (*player)->getComponent<TransformComponent>()->getPositionLastFrame();
+	DirectX::XMFLOAT3 currPosComp = (*player)->getComponent<TransformComponent>()->position;
 	DirectX::XMVECTOR lastPos = DirectX::XMLoadFloat3(&lastPosComp);
 	DirectX::XMVECTOR currPos = DirectX::XMLoadFloat3(&currPosComp);
 
@@ -91,7 +91,7 @@ void PortalSurfaceCollider::TeleportPlayer(DirectX::XMFLOAT3 collisionPoint)
 {
 	TransformComponent* thisPortalTransform = gameObject->getComponent<TransformComponent>();
 	TransformComponent* otherPortalTransform = gameObject->getComponent<PortalComponent>()->getOtherPortal()->gameObject->getComponent<TransformComponent>();
-	TransformComponent* playerTransform = player->getComponent<TransformComponent>();
+	TransformComponent* playerTransform = (*player)->getComponent<TransformComponent>();
 
 	//Rotate the player
 
@@ -144,5 +144,6 @@ void PortalSurfaceCollider::TeleportPlayer(DirectX::XMFLOAT3 collisionPoint)
 	playerTransform->position = newPosition;
 	playerTransform->setPositionLastFrame(newPosition);
 
-	player = gameObject->getComponent<PortalComponent>()->scene->moveGameObject(thisPortalTransform->layer, otherPortalTransform->layer, player);
+	//Transport player to the other layer
+	gameObject->getComponent<PortalComponent>()->scene->moveGameObject(thisPortalTransform->layer, otherPortalTransform->layer, *player);
 }

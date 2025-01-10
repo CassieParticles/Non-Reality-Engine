@@ -60,9 +60,9 @@ void PortalComponent::Render(bool RenderPortals)
 	
 }
 
-void PortalComponent::setPlayer(GameObject* player)
+void PortalComponent::setPlayer(GameObject** player)
 {
-	PlayerCameraComponent* camera = player->getComponent<PlayerCameraComponent>();
+	PlayerCameraComponent* camera = (*player)->getComponent<PlayerCameraComponent>();
 	if (!camera) { return; }	//No camera, object passed in wasn't player
 	this->player = player;
 
@@ -78,7 +78,7 @@ DirectX::XMFLOAT4X4 PortalComponent::calcMatrix()
 
 	//Move the camera to the updated position
 	TransformComponent* thisPortalTransform = gameObject->getComponent<TransformComponent>();	//The portal this camera is "rendering to"
-	TransformComponent* playerTransform = player->getComponent<TransformComponent>();
+	TransformComponent* playerTransform = (*player)->getComponent<TransformComponent>();
 	TransformComponent* otherPortalTransform = otherPortal->getComponent<TransformComponent>();	//The portal this camera will be moving around
 
 	//Get the vector from the player camera to this portal

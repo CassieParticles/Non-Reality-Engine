@@ -17,7 +17,7 @@ public:
 	PortalComponent* getOtherPortal() { return linkedPortal;}
 
 	void linkPortal(PortalComponent* other);
-	void setPlayer(GameObject* player);
+	void setPlayer(GameObject** player);
 	void SetScene(Scene* scene) { this->scene = scene; }
 	
 	void Render(bool RenderPortals) override;
@@ -29,6 +29,6 @@ protected:
 	ObliqueView obliqueView;
 
 
-	GameObject* player{};
+	GameObject** player{};
 	Scene* scene;
 };
