@@ -1,6 +1,7 @@
 #pragma once
 
 #include <engine/ObjectStructure/PhysicsComponent.h>
+#include <DirectXMath.h>
 
 class PortalSurfaceCollider : public PhysicsComponent
 {
@@ -12,5 +13,5 @@ public:
 protected:
 	GameObject* player{};
 
-	void TeleportPlayer();
+	void TeleportPlayer(DirectX::XMFLOAT3 collisionPoint);
 };

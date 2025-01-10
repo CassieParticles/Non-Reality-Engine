@@ -80,31 +80,66 @@ void PortalSurfaceCollider::Update(Timer* timer)
 		{
 			if (QMdlSpaceComp.y > -0.5 && QMdlSpaceComp.y < 0.5)
 			{
-				TeleportPlayer();
+				TeleportPlayer(QComp);
 			}
 		}
 	}
 }
 
-void PortalSurfaceCollider::TeleportPlayer()
+void PortalSurfaceCollider::TeleportPlayer(DirectX::XMFLOAT3 collisionPoint)
 {
 	TransformComponent* thisPortalTransform = gameObject->getComponent<TransformComponent>();
 	TransformComponent* otherPortalTransform = gameObject->getComponent<PortalComponent>()->getOtherPortal()->gameObject->getComponent<TransformComponent>();
+	TransformComponent* playerTransform = player->getComponent<TransformComponent>();
 
 	//Rotate the player
+
+	//Get the angle between the portals
 	DirectX::XMVECTOR thisPortalAngle = DirectX::XMLoadFloat3(&thisPortalTransform->rotation);
 	DirectX::XMVECTOR otherPortalAngle = DirectX::XMLoadFloat3(&otherPortalTransform->rotation);
 	DirectX::XMVECTOR deltaAngle = otherPortalAngle - thisPortalAngle;
 	DirectX::XMVECTOR angleOffset = deltaAngle + DirectX::XMVECTOR{ 0,3.14159f,0,0 };
 
+	//Rotate the player by this angle
 	DirectX::XMFLOAT3 angleOffsetComp;
 	DirectX::XMStoreFloat3(&angleOffsetComp, angleOffset);
-	player->getComponent<TransformComponent>()->rotation.x += angleOffsetComp.x;
-	player->getComponent<TransformComponent>()->rotation.y += angleOffsetComp.y;
-	player->getComponent<TransformComponent>()->rotation.z += angleOffsetComp.z;
+	playerTransform->rotation.x += angleOffsetComp.x;
+	playerTransform->rotation.y += angleOffsetComp.y;
+	playerTransform->rotation.z += angleOffsetComp.z;
 
 	//Move the player to the other portal
-	TransformComponent* playerTrans = player->getComponent<TransformComponent>();
-	playerTrans->position = gameObject->getComponent<PortalComponent>()->getOtherPortal()->getGameObject()->getComponent<TransformComponent>()->position;
-	playerTrans->setPositionLastFrame(gameObject->getComponent<PortalComponent>()->getOtherPortal()->getGameObject()->getComponent<TransformComponent>()->position);
+
+	//Get the vector from the portal centre to the point the player passed through
+	DirectX::XMFLOAT3 CP;
+	CP.x = collisionPoint.x - thisPortalTransform->position.x;
+	CP.y = collisionPoint.y - thisPortalTransform->position.y;
+	CP.z = collisionPoint.z - thisPortalTransform->position.z;
+
+	//Calculate how much movement the player still has left to do 
+	DirectX::XMFLOAT3 leftMovement;
+	leftMovement.x = playerTransform->position.x - collisionPoint.x;
+	leftMovement.y = playerTransform->position.y - collisionPoint.y;
+	leftMovement.z = playerTransform->position.z - collisionPoint.z;
+
+	CP.x += leftMovement.x;
+	CP.y += leftMovement.y;
+	CP.z += leftMovement.z;
+
+	//Rotate this by the difference between the portals
+	DirectX::XMVECTOR CPDisp = DirectX::XMLoadFloat3(&CP);
+	DirectX::XMMATRIX angleOffsetMat = DirectX::XMMatrixRotationRollPitchYawFromVector(angleOffset);
+	CPDisp = DirectX::XMVector3Transform(CPDisp, angleOffsetMat);
+	DirectX::XMStoreFloat3(&CP, CPDisp);
+
+	//Calcualte the new position on the portal
+	DirectX::XMFLOAT3 newPosition;
+	newPosition.x = otherPortalTransform->position.x + CP.x;
+	newPosition.y = otherPortalTransform->position.y + CP.y;
+	newPosition.z = otherPortalTransform->position.z + CP.z;
+
+
+
+	//Set the new position
+	playerTransform->position = newPosition;
+	playerTransform->setPositionLastFrame(newPosition);
 }
