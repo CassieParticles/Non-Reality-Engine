@@ -182,7 +182,7 @@ Renderer::Renderer(ComPtr<ID3D11Device> device, ComPtr<ID3D11DeviceContext> devi
 
 	screenMesh = meshLoader->getMesh("Quad");
 
-	addRenderCall<ChangeShaders>({ 5,defaultVertexShader,defaultPixelShader });
+	addRenderCall<ChangeShaders>({ 5,nullptr,nullptr });
 }
 
 
@@ -439,9 +439,11 @@ void Renderer::ResetPortalData()
 
 void Renderer::ChangeShadersFunc(VertexShader* vs, PixelShader* ps)
 {
-	vs->bindShader(deviceContext.Get());
-	ps->bindShader(deviceContext.Get());
-	//std::cout << "Changing shaders\n";
+	if (vs == nullptr) { defaultVertexShader->bindShader(deviceContext.Get()); }
+	else{ vs->bindShader(deviceContext.Get()); }
+	if (ps == nullptr) { defaultPixelShader->bindShader(deviceContext.Get()); }
+	else{ ps->bindShader(deviceContext.Get()); }
+	
 }
 
 template<>

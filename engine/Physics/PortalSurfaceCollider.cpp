@@ -21,6 +21,10 @@ void PortalSurfaceCollider::Update(Timer* timer)
 	{
 		if (PortalComponent* portalComponent = gameObject->getComponent<PortalComponent>())
 		{
+			if (!portalComponent->getOtherPortal())
+			{
+				return;
+			}
 			player = portalComponent->player;
 		}
 		else

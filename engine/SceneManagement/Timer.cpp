@@ -25,7 +25,7 @@ Timer::~Timer()
 
 bool Timer::Update()
 {
-	++frameCount;
+	
 	currentTime = std::chrono::high_resolution_clock::now();
 	double localDT = std::chrono::duration_cast<std::chrono::nanoseconds>(currentTime - previousTime).count() / 1000000000.0;
 
@@ -36,6 +36,7 @@ bool Timer::Update()
 		previousTime = currentTime;
 
 		sumTime += deltaTime;
+		++frameCount;
 
 		return true;
 	}

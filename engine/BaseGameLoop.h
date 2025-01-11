@@ -62,6 +62,6 @@ protected:
 
 protected:
 	//This is needed to track which object the player is on 
-	GameObject** playerObject;
+	GameObject** playerObject{};
 
 };

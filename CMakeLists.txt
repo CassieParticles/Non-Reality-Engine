@@ -8,6 +8,8 @@ list(APPEND ENGINE "engine/ResourceManager/TextureLoader.cpp")
 
 list(APPEND ENGINE "engine/ObjectStructure/GameObject.cpp")
 list(APPEND ENGINE "engine/ObjectStructure/DefaultComponents/TransformComponent.cpp")
+list(APPEND ENGINE "engine/ObjectStructure/DefaultComponents/ControllerComponent.cpp")
+list(APPEND ENGINE "engine/ObjectStructure/DefaultComponents/PlayerMoveComponent.cpp")
 
 list(APPEND ENGINE "engine/Physics/PortalSurfaceCollider.cpp")
 
@@ -41,7 +43,8 @@ COMMENT "Copied assets" VERBATIM
 
 add_custom_target(copyShaders ALL
 COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_LIST_DIR}/engine/Rendering/shaders" "${CMAKE_BINARY_DIR}/shaders"
-COMMENT "Copied assets" VERBATIM
+COMMENT "Copied shaders" VERBATIM
 )
 
 add_dependencies(NonRealityEngine copyShaders)
+add_dependencies(NonRealityEngine copyAssets)

@@ -26,6 +26,7 @@ void PortalComponent::linkPortal(PortalComponent* other)
 void PortalComponent::Render(bool RenderPortals)
 {
 	if (!RenderPortals) { return; }
+	if (!getOtherPortal()) { return; }
 
 	//Set rendering to be ready to map portal surface to stencil buffer (PORTALINIT)==========================
 	renderer->addRenderCall<DrawPortalSurface>({ 0 });

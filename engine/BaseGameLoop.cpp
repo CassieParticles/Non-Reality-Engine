@@ -34,6 +34,8 @@ BaseGameLoop::BaseGameLoop(const std::string& windowName, int windowWidth, int w
 
 	scene = std::make_unique<Scene>(device, deviceContext, renderer.get(),input,this);
 
+	input->setMouseCentred(false);
+
 	
 	//Set up dearImGui
 	IMGUI_CHECKVERSION();
@@ -102,7 +104,10 @@ void BaseGameLoop::render()
 {
 	window->clearBackBuffer();
 	window->bindRenderTarget();
-	scene->renderLayer((*playerObject)->getComponent<TransformComponent>()->layer,drawPortalInternals);
+	if (playerObject)
+	{
+		scene->renderLayer((*playerObject)->getComponent<TransformComponent>()->layer,drawPortalInternals);
+	}
 }
 
 void BaseGameLoop::guiRender()
