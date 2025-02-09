@@ -18,7 +18,7 @@ endif()
 # Add the tracy profiler
 option(TRACY_ENABLE "" ON)
 option (TRACY_ON_DEMAND "" ON)
-add_subdirectory(tracy-0.11.1)
+add_subdirectory(tracy)
 target_link_libraries(Non-Reality-Engine PUBLIC Tracy::TracyClient)
 
 # Add the math library glm
