@@ -1,0 +1,13 @@
+Intentions for ECS:
+
+Central registry accessible through static function
+Registry can store number of components (through separate "component registry")
+Component registry has interface, with as many functions as possible exposed through interface (can be utilized without specialization)
+Registry used to access and call functions within specific component registries, and to create entities
+Entity wrapper to act around EntityId, components can be added and removed, as well as accessed through wrapper
+Entity Wrapper can destroy Entity, or copy it
+Entities by default have a transform and tag component (storing transform, and name respectively)
+Entities can have a heirarchy, children move relative to parents, if a parent is deleted, then it's children are deleted
+Entities can store their parent, as well as access their children
+Systems can be created to make use of components
+Once systems are created, they can be added to a systems handler, that will run them
