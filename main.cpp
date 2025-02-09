@@ -1,6 +1,7 @@
 #include <iostream>
+#include <tracy/Tracy.hpp>
 
 int main()
 {
-	std::cout << "Hello, world\n";
+
 }
