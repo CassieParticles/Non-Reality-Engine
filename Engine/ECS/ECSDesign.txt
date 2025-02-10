@@ -9,5 +9,7 @@ Entity Wrapper can destroy Entity, or copy it
 Entities by default have a transform and tag component (storing transform, and name respectively)
 Entities can have a heirarchy, children move relative to parents, if a parent is deleted, then it's children are deleted
 Entities can store their parent, as well as access their children
-Systems can be created to make use of components
+Entities can be disabled, disabling an entity disables all it's components, and it's children
+Disabled components are put to the end of the registry, and aren't given by getComponents function
+Systems can be created to iterate through components
 Once systems are created, they can be added to a systems handler, that will run them

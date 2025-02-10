@@ -5,6 +5,10 @@ cmake_minimum_required (VERSION 3.8)
 project ("Non-Reality-Engine")
 
 list(APPEND SourceFiles "Engine/ECS/ECSDefinitions.h")
+list(APPEND SourceFiles "Engine/ECS/ComponentRegistry.h")
+list(APPEND SourceFiles "Engine/ECS/Component.h")
+list(APPEND SourceFiles "Engine/ECS/Registry.cpp" "Engine/ECS/Registry.h")
+list(APPEND SourceFiles "Engine/ECS/ECS.h")
 
 # Add source to this project's executable.
 add_executable (Non-Reality-Engine ${SourceFiles} "main.cpp")	#Main will be removed once engine is set up with game project in mind
