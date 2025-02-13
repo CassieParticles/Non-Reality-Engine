@@ -16,9 +16,8 @@ int main()
 	Entity entity2 = registry->CreateEntity("Entity 2");
 
 	entity0.AddComponent<TestCompA>();
-	entity0.HasComponent<TestCompA>();
-	entity0.GetComponent<TestCompA>();
-	entity0.RemoveComponent<TestCompA>();
+
+	registry->DestroyEntity(entity0.getEntityId());
 
 
 	Registry::DestroyRegistry();

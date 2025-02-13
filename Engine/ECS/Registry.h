@@ -30,6 +30,8 @@ public:
 
 	//Create new entity
 	Entity CreateEntity(const std::string& name = "Entity");
+	//Destroy all entity components
+	void DestroyEntity(EntityId entId);
 	
 private:
 	Registry() { nextFreeId = 0; }
