@@ -11,6 +11,8 @@ list(APPEND SourceFiles "Engine/ECS/Registry.cpp" "Engine/ECS/Registry.h")
 list(APPEND SourceFiles "Engine/ECS/Entity.cpp" "Engine/ECS/Entity.h")
 list(APPEND SourceFiles "Engine/ECS/ECS.h")
 
+list(APPEND SourceFiles "Engine/testComp.h")
+
 # Add source to this project's executable.
 add_executable (Non-Reality-Engine ${SourceFiles} "main.cpp")	#Main will be removed once engine is set up with game project in mind
 

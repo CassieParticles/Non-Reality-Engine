@@ -4,6 +4,7 @@
 #include <type_traits>
 
 #include "Engine/ECS/ECS.h"
+#include "Engine/testComp.h"
 
 int main()
 {
@@ -14,11 +15,10 @@ int main()
 	Entity entity1 = registry->CreateEntity("Entity 1");
 	Entity entity2 = registry->CreateEntity("Entity 2");
 
-	while (true)
-	{
-		
-	}
-
+	entity0.AddComponent<TestCompA>();
+	entity0.HasComponent<TestCompA>();
+	entity0.GetComponent<TestCompA>();
+	entity0.RemoveComponent<TestCompA>();
 
 
 	Registry::DestroyRegistry();

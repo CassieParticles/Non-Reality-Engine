@@ -6,8 +6,8 @@
 
 #include "ECSDefinitions.h"
 #include "ComponentRegistry.h"
-#include "Entity.h"
 
+class Entity;
 
 class Registry final
 {
@@ -29,7 +29,8 @@ public:
 	C* GetComponent(EntityId entId);
 
 	//Create new entity
-	Entity CreateEntity(const std::string& name = "Entity") { ZoneScopedN("Create entity"); return Entity(name, nextFreeId++); }
+	Entity CreateEntity(const std::string& name = "Entity");
+	
 private:
 	Registry() { nextFreeId = 0; }
 	static Registry* registry;
@@ -78,7 +79,7 @@ inline C* Registry::GetComponent(EntityId entId)
 	ZoneScopedN("Get component");
 	if (ComponentRegistry<C>* registry = getRegistry<C>())
 	{
-		return registry->GetComponent(entId);
+		return reinterpret_cast<C*>(registry->GetComponent(entId));
 	}
 	return nullptr;
 }
