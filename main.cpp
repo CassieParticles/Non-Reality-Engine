@@ -10,23 +10,13 @@ int main()
 	FrameMark;
 	Registry* registry = Registry::getRegistry();
 
-	EntityId entity0 = 0;
-	EntityId entity1 = 1;
-	EntityId entity2 = 2;
-
-	registry->AddComponent<TagComponent>(entity0, "Entity 0");
-	registry->AddComponent<TagComponent>(entity1, "Entity 1");
-	registry->AddComponent<TagComponent>(entity2, "Entity 2");
-
-
-	registry->AddComponent<TransformComponent>(entity0);
-	registry->AddComponent<TransformComponent>(entity1);
-	registry->AddComponent<TransformComponent>(entity2);
+	Entity entity0 = registry->CreateEntity("Entity 0");
+	Entity entity1 = registry->CreateEntity("Entity 1");
+	Entity entity2 = registry->CreateEntity("Entity 2");
 
 	while (true)
 	{
-		registry->RemoveComponent<TagComponent>(entity0);
-		registry->AddComponent<TagComponent>(entity0, "Entity 0");
+		
 	}
 
 

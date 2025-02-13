@@ -6,6 +6,8 @@
 
 #include "ECSDefinitions.h"
 #include "ComponentRegistry.h"
+#include "Entity.h"
+
 
 class Registry final
 {
@@ -25,9 +27,14 @@ public:
 	//Get attached component to entId
 	template<Component C>
 	C* GetComponent(EntityId entId);
+
+	//Create new entity
+	Entity CreateEntity(const std::string& name = "Entity") { ZoneScopedN("Create entity"); return Entity(name, nextFreeId++); }
 private:
-	Registry() {}
+	Registry() { nextFreeId = 0; }
 	static Registry* registry;
+
+	EntityId nextFreeId;
 
 	std::unordered_map<size_t, std::unique_ptr<IComponentRegistry>> registries;
 	template<Component C>

@@ -8,6 +8,7 @@ list(APPEND SourceFiles "Engine/ECS/ECSDefinitions.h")
 list(APPEND SourceFiles "Engine/ECS/ComponentRegistry.h")
 list(APPEND SourceFiles "Engine/ECS/Component.h")
 list(APPEND SourceFiles "Engine/ECS/Registry.cpp" "Engine/ECS/Registry.h")
+list(APPEND SourceFiles "Engine/ECS/Entity.cpp" "Engine/ECS/Entity.h")
 list(APPEND SourceFiles "Engine/ECS/ECS.h")
 
 # Add source to this project's executable.
