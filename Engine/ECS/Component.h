@@ -19,6 +19,7 @@ protected:
 	EntityId entityId;
 
 	virtual void OnComponentAdded() {}
+	virtual void OnComponentCopied() {}
 	virtual void OnComponentRemoved() {}
 };
 

@@ -29,3 +29,8 @@ void Entity::DestroyEntity()
 {
 	Registry::getRegistry()->DestroyEntity(entityId);
 }
+
+Entity Entity::CopyEntity()
+{
+	return Registry::getRegistry()->CopyEntity(entityId);
+}

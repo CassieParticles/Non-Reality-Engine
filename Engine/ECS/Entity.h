@@ -32,6 +32,8 @@ public:
 
 	//DEstroy entity (destroys all game objects)
 	void DestroyEntity();
+	//Create and return a copy of this entity
+	[[nodiscard]] Entity CopyEntity();
 	//Get Entity ID
 	EntityId getEntityId() { return entityId; }
 private:

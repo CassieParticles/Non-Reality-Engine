@@ -29,9 +29,11 @@ public:
 	C* GetComponent(EntityId entId);
 
 	//Create new entity
-	Entity CreateEntity(const std::string& name = "Entity");
+	[[nodiscard]]Entity CreateEntity(const std::string& name = "Entity");
 	//Destroy all entity components
 	void DestroyEntity(EntityId entId);
+	//Copy entity (copy all components attached), and return copy
+	[[nodiscard]]Entity CopyEntity(Entity original);
 	
 private:
 	Registry() { nextFreeId = 0; }

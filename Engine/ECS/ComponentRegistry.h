@@ -18,15 +18,24 @@ public:
 	virtual bool HasComponent(EntityId entId) = 0;
 	//Get the component attached to entId
 	virtual BaseComponent* GetComponent(EntityId entId) = 0;
+	//Copy component C attached to entity entId
+	virtual void CopyComponent(EntityId origEntId,EntityId newEntId) = 0;
 protected:
 	virtual void resize() = 0;
 
-	//Assign entityId, and call OnComponentAdded (Interface is a friend function)
+	//Set up the component to be attached to the entity
 	void createComponent(EntityId entId, BaseComponent* base)
 	{
 		base->entityId = entId;
 		base->OnComponentAdded();
 	}
+	//Set up the component to be attached to the entity
+	void copyComponent(EntityId entId, BaseComponent* base)
+	{
+		base->entityId = entId;
+		base->OnComponentCopied();
+	}
+
 	//Call OnComponentDestroyed (Interface is a friend function)
 	void removeComponent(BaseComponent* base)
 	{
@@ -40,11 +49,16 @@ class ComponentRegistry final : public IComponentRegistry
 	friend class Registry;
 public:
 	template<typename... Args>
-	C* AddComponent(EntityId entId, Args... args);	//Not part of the interface, since virtual functions cannot have templates
+	//Add component C to entity entId, return a pointer to the component
+	C* AddComponent(EntityId entId, Args... args);	
+	//Remove component C from entity entId
 	void RemoveComponent(EntityId entId) override;
+	//Checks whether component C is in entity entId
 	bool HasComponent(EntityId entId) override;
+	//Get BaseComponent ptr to component C in entity entId
 	BaseComponent* GetComponent(EntityId entId) override;
-
+	//Copy component C attached to entity entId
+	void CopyComponent(EntityId origEntId, EntityId newEntId) override;
 private:
 	ComponentRegistry() { componentVector.resize(256); }	//Private constructor, ComponentRegistry can only be created by registry
 	std::vector<uint8_t> componentVector;	//Byte array for storing components, using bytes ensures component default constructor isn't called
@@ -132,6 +146,36 @@ inline BaseComponent* ComponentRegistry<C>::GetComponent(EntityId entId)
 	BaseComponent* baseCompPtr = reinterpret_cast<BaseComponent*>(componentVector.data() + index * sizeof(C));
 
 	return baseCompPtr;
+}
+
+template<Component C>
+inline void ComponentRegistry<C>::CopyComponent(EntityId origEntId, EntityId newEntId)
+{
+	ZoneScopedN("Copy component");
+	//Checks to ensure space for new component exists, and component exists on old game object
+	if (!HasComponent(origEntId))
+	{
+		return;
+	}
+	if ((nextFreeIndex + 1) * sizeof(C) >= componentVector.size())
+	{
+		resize();
+	}
+
+	//Get component to be copied
+	BaseComponent* baseComp = GetComponent(origEntId);
+	C* origComp = reinterpret_cast<C*>(baseComp);
+	//Copy component and get pointer to it
+	C* newComp = reinterpret_cast<C*>(componentVector.data() + nextFreeIndex * sizeof(C));
+	new(newComp) C(*origComp);
+	//Set up the copied component
+	BaseComponent* newCompBase = reinterpret_cast<BaseComponent*>(newComp);
+	copyComponent(newEntId, newCompBase);
+
+	//Update registry map with new component
+	EntIndexMap.insert({ newEntId,nextFreeIndex });
+
+	++nextFreeIndex;
 }
 
 template<Component C>

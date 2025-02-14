@@ -32,3 +32,15 @@ void Registry::DestroyEntity(EntityId entId)
 		it.second->RemoveComponent(entId);
 	}
 }
+
+Entity Registry::CopyEntity(Entity original)
+{
+	ZoneScopedN("Copy entity");
+	Entity newEnt = Entity(nextFreeId++);
+	for (auto& it : registries)
+	{
+		it.second->CopyComponent(original.getEntityId(), newEnt.getEntityId());
+	}
+
+	return newEnt;
+}

@@ -12,13 +12,10 @@ int main()
 	Registry* registry = Registry::getRegistry();
 
 	Entity entity0 = registry->CreateEntity("Entity 0");
-	Entity entity1 = registry->CreateEntity("Entity 1");
-	Entity entity2 = registry->CreateEntity("Entity 2");
 
-	entity0.AddComponent<TestCompA>();
 
-	registry->DestroyEntity(entity0.getEntityId());
 
+	Entity entity0Copy = entity0.CopyEntity();
 
 	Registry::DestroyRegistry();
 }
