@@ -2,8 +2,6 @@
 
 #include "Registry.h"
 
-
-
 Entity::Entity(const std::string& name, EntityId entityId):entityId{entityId}
 {
 	Registry* registry = Registry::getRegistry();
@@ -25,4 +23,9 @@ Entity::Entity(Entity&& other)
 Entity Entity::operator=(Entity& RHS)
 {
 	return RHS;
+}
+
+void Entity::DestroyEntity()
+{
+	Registry::getRegistry()->DestroyEntity(entityId);
 }

@@ -16,15 +16,23 @@ public:
 
 	Entity operator=(Entity& RHS);
 
+	//Add component C to entity
 	template<Component C, typename... Args>
 	C* AddComponent(Args...);
+	//Remove component C from entity
 	template<Component C>
 	void RemoveComponent();
+	//Check whether entity has componene C
 	template<Component C>
 	bool HasComponent();
+	//Get component C if attached to gameObject
 	template<Component C>
 	C* GetComponent();
 
+
+	//DEstroy entity (destroys all game objects)
+	void DestroyEntity();
+	//Get Entity ID
 	EntityId getEntityId() { return entityId; }
 private:
 	Entity(const std::string& name, EntityId entityId);
