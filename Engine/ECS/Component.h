@@ -42,4 +42,6 @@ public:
 	TagComponent(TagComponent& other) { name = other.name; }
 	TagComponent operator=(TagComponent& rhs) { return rhs; }
 	std::string name;
+
+	operator const std::string&() const { return name; }
 };

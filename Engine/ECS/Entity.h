@@ -16,6 +16,10 @@ public:
 
 	Entity operator=(Entity& RHS);
 
+	operator EntityId() const { return entityId; }
+
+	const std::string& name() { return *GetComponent<TagComponent>(); }
+
 	//Add component C to entity
 	template<Component C, typename... Args>
 	C* AddComponent(Args...);
@@ -36,6 +40,7 @@ public:
 	[[nodiscard]] Entity CopyEntity();
 	//Get Entity ID
 	EntityId getEntityId() { return entityId; }
+
 private:
 	Entity(const std::string& name, EntityId entityId);
 

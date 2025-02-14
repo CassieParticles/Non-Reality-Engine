@@ -5,8 +5,9 @@ Registry can store number of components (through separate "component registry")-
 Component registry has interface, with as many functions as possible exposed through interface (can be utilized without specialization)-Done
 Registry used to access and call functions within specific component registries, and to create entities-Done
 Entity wrapper to act around EntityId, components can be added and removed, as well as accessed through wrapper-Done
-Entity Wrapper can destroy Entity, or copy it
-Entities by default have a transform and tag component (storing transform, and name respectively)
+Entity Wrapper can destroy Entity, or copy it-Done
+Entities by default have a transform and tag component (storing transform, and name respectively)-Done
+Entity wrapper implicitly casts to it's ID, as does tagComponent-Done
 Entities can have a heirarchy, children move relative to parents, if a parent is deleted, then it's children are deleted
 Entities can store their parent, as well as access their children
 Entities can be disabled, disabling an entity disables all it's components, and it's children

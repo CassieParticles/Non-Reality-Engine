@@ -13,7 +13,7 @@ int main()
 
 	Entity entity0 = registry->CreateEntity("Entity 0");
 
-
+	EntityId entId = entity0;
 
 	Entity entity0Copy = entity0.CopyEntity();
 
